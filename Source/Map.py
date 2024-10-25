@@ -1,7 +1,6 @@
 import sys
 import pygame
 import queue
-import pyautogui 
 import tkinter as tk
 
 pygame.init()
@@ -28,6 +27,7 @@ background = 255, 226, 191
 
 
 class Game:
+    cost = 0
     def is_valid_value(self, char):
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
@@ -74,18 +74,47 @@ class Game:
                 sys.stdout.flush()
             sys.stdout.write('\n')
     
+    def Ares(self):
+        x = 0
+        y = 0
+        for row in self.matrix:
+            for pos in row:
+                if pos == '@' or pos == '+':
+                    return (x, y, pos)
+                else:
+                    x += 1
+            y += 1
+            x = 0
+            
+    
     def in_of_wall(self, x, y):
         # Kiểm tra có bao quanh bởi ít nhất 4 bức tường hay không
         if x == 0 or y == 0 or x == len(self.matrix) - 1 or y == len(self.matrix[x]) - 1:
             return False
+        
         wall_count = 0
-        # kiểm tra theo hàng ngang
-        for i in range(len(self.matrix[x])):
+        
+        # qua phải
+        for i in range(y, len(self.matrix[x])):
             if self.matrix[x][i] == '#':
                 wall_count += 1
-        
-        # kiểm tra theo hàng dọc
-        return wall_count > 1
+                break
+        # qua trái
+        for i in range(y, -1, -1):
+            if self.matrix[x][i] == '#':
+                wall_count += 1
+                break
+        # xuống dưới
+        for i in range(x, len(self.matrix)):
+            if self.matrix[i][y] == '#':
+                wall_count += 1
+                break
+        # lên trên
+        for i in range(x, -1, -1):
+            if self.matrix[i][y] == '#':
+                wall_count += 1
+                break
+        return wall_count >= 4
     
     def draw_map(self):                    
         for i in range(len(self.matrix)):
@@ -107,6 +136,27 @@ class Game:
                     
         pygame.display.flip()
 
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
 filename = input("Enter the level: ")
 game = Game('input/input-'+filename+'.txt')
