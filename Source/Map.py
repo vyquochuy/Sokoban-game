@@ -4,25 +4,31 @@ import queue
 import pyautogui 
 import tkinter as tk
 
-wall = pygame.image.load("img/wall.png")
-floor = pygame.image.load('img/floor.png')
-stone = pygame.image.load('img/stone.png')
-box_docked = pygame.image.load('img/stone on stock.png')
-Ares = pygame.image.load('img/Ares.png')
-Ares_on_stock = pygame.image.load('img/Ares on stock.png')
-stock = pygame.image.load('img/stock.png')
-background = 255, 226, 191
 pygame.init()
+
+pygame.display.set_caption("Ares's Adventure")
 
 x= 1440
 y = 900
 SCREEN = pygame.display.set_mode((x, y))
 BG = pygame.image.load("img/background.png")
 BG = pygame.transform.scale(BG, (x, y))
+
+tile_size = 50
+
+# Load images
+wall = pygame.transform.scale(pygame.image.load("img/wall.png"), (tile_size, tile_size))
+floor = pygame.transform.scale(pygame.image.load('img/floor.png'), (tile_size, tile_size))
+stone = pygame.transform.scale(pygame.image.load('img/stone.png'), (tile_size, tile_size))
+box_docked = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (tile_size, tile_size))
+Ares = pygame.transform.scale(pygame.image.load('img/Ares.png').convert_alpha(), (tile_size, tile_size))
+Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'), (tile_size, tile_size))
+stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (tile_size, tile_size))
+background = 255, 226, 191
+
 level = ''
 method=''
 moves = ''
-
 
 class Game:
     def is_valid_value(self, char):
@@ -86,5 +92,21 @@ class Game:
                     SCREEN.blit(box_docked, (j*50, i*50))
         pygame.display.flip()
                 
-                
-Game('input/input-10.txt').print_matrix()
+filename = input("Enter the level: ")
+game = Game('input/input-'+filename+'.txt')
+
+game.print_matrix()
+
+# Vòng lặp chính
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    # Vẽ lại bản đồ
+    game.draw_map()
+
+# Thoát pygame
+pygame.quit()
+sys.exit()
