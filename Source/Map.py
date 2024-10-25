@@ -2,13 +2,13 @@ import sys
 import pygame
 import queue
 
-pygame.init()
 
 # Kích thước MÀN HÌNH
 SCREEN_WIDTH = 1440
 SCREEN_HEIGHT = 900
 
-# tiêu đề
+# khởi tạo pygame
+pygame.init()
 pygame.display.set_caption("Ares's Adventure")
 
 class Game:
