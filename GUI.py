@@ -1,4 +1,57 @@
 import sys
+import pygame
+import queue
+import pyautogui 
+
+wall = pygame.image.load("img/wall.png")
+floor = pygame.image.load('img/floor.png')
+stone = pygame.image.load('img/stone.png')
+box_docked = pygame.image.load('img/stone on stock.png')
+Ares = pygame.image.load('img/Ares.png')
+Ares_on_stock = pygame.image.load('img/Ares on stock.png')
+stock = pygame.image.load('img/stock.png')
+background = 255, 226, 191
+pygame.init()
+
+x= 1440
+y = 900
+SCREEN = pygame.display.set_mode((x, y))
+pygame.display.set_caption("Menu")
+BG = pygame.image.load("img/background.png")
+BG = pygame.transform.scale(BG, (x, y))
+level = ''
+method=''
+moves = ''
+
+class Button():
+	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+		self.image = image
+		self.x_pos = pos[0]
+		self.y_pos = pos[1]
+		self.font = font
+		self.base_color, self.hovering_color = base_color, hovering_color
+		self.text_input = text_input
+		self.text = self.font.render(self.text_input, True, self.base_color)
+		if self.image is None:
+			self.image = self.text
+		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+	def update(self, screen):
+		if self.image is not None:
+			screen.blit(self.image, self.rect)
+		screen.blit(self.text, self.text_rect)
+
+	def checkForInput(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			return True
+		return False
+
+	def changeColor(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			self.text = self.font.render(self.text_input, True, self.hovering_color)
+		else:
+			self.text = self.font.render(self.text_input, True, self.base_color)
 
 class Game:
     def is_valid_value(self, char):
@@ -61,124 +114,169 @@ class Game:
         else:
             print ("ERROR: Value '"+content+"' to be added is not valid")
 
-    def Ares(self):
-        x = 0
-        y = 0
-        for row in self.matrix:
-            for pos in row:
-                if pos == '@' or pos == '+':
-                    return (x, y, pos)
-                else:
-                    x = x + 1
-            y = y + 1
-            x = 0
-
-    def can_move(self,x,y):
-        return self.get_content(self.Ares()[0]+x,self.Ares()[1]+y) not in ['#','*','$']
-
-    def next(self,x,y):
-        return self.get_content(self.Ares()[0]+x,self.Ares()[1]+y)
-
-    def can_push(self,x,y):
-        return (self.next(x,y) in ['*','$'] and self.next(x+x,y+y) in [' ','.'])
-
-    def is_completed(self):
-        for row in self.matrix:
-            for cell in row:
-                if cell == '$':
-                    return False
-        return True
-
-    def move_box(self,x,y,a,b):
-#        (x,y) -> move to do
-#        (a,b) -> box to move
-        current_box = self.get_content(x,y)
-        future_box = self.get_content(x+a,y+b)
-        if current_box == '$' and future_box == ' ':
-            self.set_content(x+a,y+b,'$')
-            self.set_content(x,y,' ')
-        elif current_box == '$' and future_box == '.':
-            self.set_content(x+a,y+b,'*')
-            self.set_content(x,y,' ')
-        elif current_box == '*' and future_box == ' ':
-            self.set_content(x+a,y+b,'$')
-            self.set_content(x,y,'.')
-        elif current_box == '*' and future_box == '.':
-            self.set_content(x+a,y+b,'*')
-            self.set_content(x,y,'.')
-
-    def unmove(self):
-        if not self.queue.empty():
-            movement = self.queue.get()
-            if movement[2]:
-                current = self.Ares()
-                self.move(movement[0] * -1,movement[1] * -1, False)
-                self.move_box(current[0]+movement[0],current[1]+movement[1],movement[0] * -1,movement[1] * -1)
-            else:
-                self.move(movement[0] * -1,movement[1] * -1, False)
-
-    def move(self,x,y,save):
-        if self.can_move(x,y):
-            current = self.Ares()
-            future = self.next(x,y)
-            if current[2] == '@' and future == ' ':
-                self.set_content(current[0]+x,current[1]+y,'@')
-                self.set_content(current[0],current[1],' ')
-                if save: self.queue.put((x,y,False))
-            elif current[2] == '@' and future == '.':
-                self.set_content(current[0]+x,current[1]+y,'+')
-                self.set_content(current[0],current[1],' ')
-                if save: self.queue.put((x,y,False))
-            elif current[2] == '+' and future == ' ':
-                self.set_content(current[0]+x,current[1]+y,'@')
-                self.set_content(current[0],current[1],'.')
-                if save: self.queue.put((x,y,False))
-            elif current[2] == '+' and future == '.':
-                self.set_content(current[0]+x,current[1]+y,'+')
-                self.set_content(current[0],current[1],'.')
-                if save: self.queue.put((x,y,False))
                 
-        elif self.can_push(x,y):
-            current = self.Ares()
-            future = self.next(x,y)
-            future_box = self.next(x+x,y+y)
-            if current[2] == '@' and future == '$' and future_box == ' ':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],' ')
-                self.set_content(current[0]+x,current[1]+y,'@')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '@' and future == '$' and future_box == '.':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],' ')
-                self.set_content(current[0]+x,current[1]+y,'@')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '@' and future == '*' and future_box == ' ':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],' ')
-                self.set_content(current[0]+x,current[1]+y,'+')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '@' and future == '*' and future_box == '.':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],' ')
-                self.set_content(current[0]+x,current[1]+y,'+')
-                if save: self.queue.put((x,y,True))
-            if current[2] == '+' and future == '$' and future_box == ' ':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],'.')
-                self.set_content(current[0]+x,current[1]+y,'@')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '+' and future == '$' and future_box == '.':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],'.')
-                self.set_content(current[0]+x,current[1]+y,'+')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '+' and future == '*' and future_box == ' ':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],'.')
-                self.set_content(current[0]+x,current[1]+y,'+')
-                if save: self.queue.put((x,y,True))
-            elif current[2] == '+' and future == '*' and future_box == '.':
-                self.move_box(current[0]+x,current[1]+y,x,y)
-                self.set_content(current[0],current[1],'.')
-                self.set_content(current[0]+x,current[1]+y,'+')
-                if save: self.queue.put((x,y,True))
+def print_game(matrix,screen):
+    screen.fill(background)
+    x = 0
+    y = 0
+    for row in matrix:
+        for char in row:
+            if char == ' ': #floor
+                screen.blit(floor,(x,y))
+            elif char == '#': #wall
+                screen.blit(wall,(x,y))
+            elif char == '@': #Ares on floor
+                screen.blit(Ares,(x,y))
+            elif char == '.': #dock
+                screen.blit(docker,(x,y))
+            elif char == '*': #stone on stock
+                screen.blit(box_docked,(x,y))
+            elif char == '$': #stone on floor
+                screen.blit(box,(x,y))
+            elif char == '+': #Ares on dock
+                screen.blit(worker_docked,(x,y))
+            x = x + 32
+        x = 0
+        y = y + 32
+
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("font.ttf", size)
+
+def play():
+    Game
+    while True:
+        PLAY_MOUSE_POS = pygame.mouse.get_pos()
+        SCREEN.fill("black")
+        print_game(game.get_matrix(),SCREEN)
+        OPTIONS_BUTTON = Button(image=None, pos=(x-200,y-800),
+                    text_input="OPTIONS", font=get_font(40), base_color="White", hovering_color="Green")
+        PLAY_BACK = Button(image=None, pos=(x-200,y-500), 
+                    text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
+        CALCULATE_BUTTON = Button(image=None, pos=(x-200,y-700), 
+                    text_input="CALCULATE", font=get_font(40), base_color="White", hovering_color="Green")
+        AUTO_SOLVE_BUTTON = Button(image=None, pos=(x-200,y-600), 
+                    text_input="SOLVE", font=get_font(40), base_color="White", hovering_color="Green")      
+        PLAY_BACK.update(SCREEN)
+        OPTIONS_BUTTON.changeColor(PLAY_MOUSE_POS)
+        OPTIONS_BUTTON.update(SCREEN)
+
+        if method: 
+            CALCULATE_BUTTON.changeColor(PLAY_MOUSE_POS)
+            CALCULATE_BUTTON.update(SCREEN)
+        if moves: 
+            AUTO_SOLVE_BUTTON.changeColor(PLAY_MOUSE_POS)
+            AUTO_SOLVE_BUTTON.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    select_Level()
+                if OPTIONS_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    Solve_choice()
+                if CALCULATE_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    Calculate()
+                if AUTO_SOLVE_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    Start_Solve()
+
+        pygame.display.update()
+        
+def start_game():
+    start = pygame.display.set_mode((320,240))
+    level = int(ask(start,"Select Level"))
+    if level > 0:
+        return level
+    else:
+        print ("ERROR: Invalid Level: "+str(level))
+        sys.exit(2)
+        
+def select_Level():
+    global game
+    global level
+    global moves
+    global method
+    input_rect = pygame.Rect(800, 140, 150, 50)
+    level = ""  # Khởi tạo level là chuỗi rỗng
+    
+    while True:
+        PLAY_MOUSE_POS = pygame.mouse.get_pos()
+        
+        SCREEN.fill("black")
+        pygame.draw.rect(SCREEN, "white", input_rect, 2)
+        
+        level_input = get_font(45).render(level, True, "white")
+        SCREEN.blit(level_input, (input_rect.x + 40, input_rect.y + 5))
+
+        PLAY_TEXT = get_font(45).render("Enter your level", True, "White")
+        PLAY_RECT = PLAY_TEXT.get_rect(center=(400, 160))
+        SCREEN.blit(PLAY_TEXT, PLAY_RECT)
+
+        PLAY_BACK = Button(image=None, pos=(740, 600), text_input="BACK", font=get_font(40), base_color="White", hovering_color="Green")
+        PLAY_BACK.changeColor(PLAY_MOUSE_POS)
+        PLAY_BACK.update(SCREEN)
+
+        PLAY_START = Button(image=None, pos=(740, 400), text_input="START", font=get_font(40), base_color="White", hovering_color="Green")
+        PLAY_START.changeColor(PLAY_MOUSE_POS)
+        PLAY_START.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            # Kiểm tra sự kiện nhấn chuột
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    main_menu()
+                elif PLAY_START.checkForInput(PLAY_MOUSE_POS):
+                    game = Game('input/input-'+ str(int(level)) + '.txt',int(level))
+                    method = ''
+                    moves = ''
+                    play()
+
+            # Kiểm tra sự kiện bàn phím
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    level = level[:-1]  # Xóa ký tự cuối cùng
+                else:
+                    level += event.unicode  # Thêm ký tự mới vào level
+
+        pygame.display.flip()
+
+def main_menu():
+    global game
+    while True:
+        SCREEN.blit(BG, (0, 0))
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(740, 100))
+
+        PLAY_BUTTON = Button(image=pygame.image.load("img/Play Rect.png"), pos=(740, 350),
+                            text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        
+        QUIT_BUTTON = Button(image=pygame.image.load("img/Quit Rect.png"), pos=(740, 550), 
+                            text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
+
+        for button in [PLAY_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(SCREEN)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    select_Level()
+
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
+
+main_menu()
