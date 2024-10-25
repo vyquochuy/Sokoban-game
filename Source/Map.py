@@ -66,6 +66,25 @@ class Game:
                 sys.stdout.write(char)
                 sys.stdout.flush()
             sys.stdout.write('\n')
+    
+    def draw_map(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if self.matrix[i][j] == '#':
+                    SCREEN.blit(wall, (j*50, i*50))
+                elif self.matrix[i][j] == ' ':
+                    SCREEN.blit(floor, (j*50, i*50))
+                elif self.matrix[i][j] == '@':
+                    SCREEN.blit(Ares, (j*50, i*50))
+                elif self.matrix[i][j] == '.':
+                    SCREEN.blit(stock, (j*50, i*50))
+                elif self.matrix[i][j] == '+':
+                    SCREEN.blit(Ares_on_stock, (j*50, i*50))
+                elif self.matrix[i][j] == '$':
+                    SCREEN.blit(stone, (j*50, i*50))
+                elif self.matrix[i][j] == '*':
+                    SCREEN.blit(box_docked, (j*50, i*50))
+        pygame.display.flip()
                 
                 
 Game('input/input-10.txt').print_matrix()
