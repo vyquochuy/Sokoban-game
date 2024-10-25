@@ -83,7 +83,6 @@ class MapSelection(tk.Frame):
         label = tk.Label(self, text="Chọn bản đồ", font=("Helvetica", TITLE_SIZE), bg=BUTTON_COLOR, fg="white")
         label.place(relx=0.5, rely=0.15, anchor="center")
 
-
         for idx, map_name in enumerate(MAPS):
             col = idx % 2  # Cột (0 hoặc 1)
             row = idx // 2  # Hàng (tính toán từ chỉ số)
