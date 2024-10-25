@@ -96,7 +96,6 @@ class Game:
             except:
                 continue
         return wall_count >= 4
-    
     def draw_map(self):         
         # VẼ BACKGROUND
         self.screen.fill((154, 126, 111))
