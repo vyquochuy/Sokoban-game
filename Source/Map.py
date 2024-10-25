@@ -76,10 +76,10 @@ class Game:
     def draw_map(self):
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
-                if self.matrix[i][j] == '#':
-                    SCREEN.blit(wall, (j*50, i*50))
-                elif self.matrix[i][j] == ' ':
+                if self.matrix[i][j] == ' ':
                     SCREEN.blit(floor, (j*50, i*50))
+                elif self.matrix[i][j] == '#':
+                    SCREEN.blit(wall, (j*50, i*50))
                 elif self.matrix[i][j] == '@':
                     SCREEN.blit(Ares, (j*50, i*50))
                 elif self.matrix[i][j] == '.':
