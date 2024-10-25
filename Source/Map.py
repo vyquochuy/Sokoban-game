@@ -20,7 +20,7 @@ tile_size = 50
 wall = pygame.transform.scale(pygame.image.load("img/wall.png"), (tile_size, tile_size))
 floor = pygame.transform.scale(pygame.image.load('img/floor.png'), (tile_size, tile_size))
 stone = pygame.transform.scale(pygame.image.load('img/stone.png'), (tile_size, tile_size))
-box_docked = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (tile_size, tile_size))
+stone_on_stock = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (tile_size, tile_size))
 Ares = pygame.transform.scale(pygame.image.load('img/Ares.png').convert_alpha(), (tile_size, tile_size))
 Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'), (tile_size, tile_size))
 stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (tile_size, tile_size))
@@ -74,12 +74,25 @@ class Game:
                 sys.stdout.flush()
             sys.stdout.write('\n')
     
-    def draw_map(self):
+    def in_of_wall(self, x, y):
+        # Kiểm tra có bao quanh bởi ít nhất 4 bức tường hay không
+        if x == 0 or y == 0 or x == len(self.matrix) - 1 or y == len(self.matrix[x]) - 1:
+            return False
+        wall_count = 0
+        # kiểm tra theo hàng ngang
+        for i in range(len(self.matrix[x])):
+            if self.matrix[x][i] == '#':
+                wall_count += 1
+        
+        # kiểm tra theo hàng dọc
+        return wall_count > 1
+    
+    def draw_map(self):                    
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
-                if self.matrix[i][j] == ' ':
+                if self.in_of_wall(i, j):
                     SCREEN.blit(floor, (j*50, i*50))
-                elif self.matrix[i][j] == '#':
+                if self.matrix[i][j] == '#':
                     SCREEN.blit(wall, (j*50, i*50))
                 elif self.matrix[i][j] == '@':
                     SCREEN.blit(Ares, (j*50, i*50))
@@ -90,8 +103,10 @@ class Game:
                 elif self.matrix[i][j] == '$':
                     SCREEN.blit(stone, (j*50, i*50))
                 elif self.matrix[i][j] == '*':
-                    SCREEN.blit(box_docked, (j*50, i*50))
+                    SCREEN.blit(stone_on_stock, (j*50, i*50))
+                    
         pygame.display.flip()
+
                 
 filename = input("Enter the level: ")
 game = Game('input/input-'+filename+'.txt')
