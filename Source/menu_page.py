@@ -1,4 +1,5 @@
 import tkinter as tk
+import Map
 from PIL import  Image, ImageTk
 
 ALGORITHMS = ["BFS", "DFS", "USC", "A*"]
@@ -93,8 +94,6 @@ class MapSelection(tk.Frame):
             self.grid_columnconfigure(0, weight=1)
             self.grid_columnconfigure(1, weight=1)
             
-        
-        
         button_back = tk.Button(self, text="Quay lại Menu",
                                 command=lambda: controller.show_frame("MenuPage"), height=2, width=15)
         button_back.grid(row=(len(MAPS) // 2) + 1, column=0, columnspan=2, pady=20)  # Đặt nút quay lại ở dưới cùng
@@ -103,7 +102,15 @@ class MapSelection(tk.Frame):
         self.controller.map_name = map_name
         print(f"Bản đồ đã chọn: {map_name}")
         
-        # code tiếp ở đây ::))))))))))
+        # code tiếp ở đây :))))))))))
+    
+        map_number = int(map_name.split()[-1])
+        if map_number != 10:
+            filepath = f"input/input-0{map_number}.txt"
+        else:
+            filepath = f"input/input-{map_number}.txt"
+            
+        map = Map.run_game(filepath)
 
 class App(tk.Tk):
     def __init__(self):

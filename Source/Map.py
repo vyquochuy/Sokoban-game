@@ -11,7 +11,7 @@ SCREEN_HEIGHT = 900
 pygame.init()
 pygame.display.set_caption("Ares's Adventure")
 
-class Game:
+class map:
     def is_valid_value(self, char):
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
@@ -96,6 +96,7 @@ class Game:
             except:
                 continue
         return wall_count >= 4
+    
     def draw_map(self):         
         # VẼ BACKGROUND
         self.screen.fill((154, 126, 111))
@@ -121,16 +122,17 @@ class Game:
 
         pygame.display.flip()
 
-filename = input("Enter the level: ")
-game = Game('input/input-' + filename + '.txt')
+# filename = input("Enter the level: ")
+# game = Game('input/input-' + filename + '.txt')
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+def run_game(filename):
+    m = map(filename)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
     
-    game.draw_map()
+        m.draw_map()
 
-pygame.quit()
-sys.exit()
+    pygame.quit()
