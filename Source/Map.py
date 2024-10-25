@@ -26,9 +26,6 @@ Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'
 stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (tile_size, tile_size))
 background = 255, 226, 191
 
-level = ''
-method=''
-moves = ''
 
 class Game:
     def is_valid_value(self, char):
@@ -40,6 +37,10 @@ class Game:
         self.weights = []
         
         with open(filename,'r') as file:
+            if not file:
+                print ("ERROR: file " +filename+ "  not found")
+                sys.exit(1)
+
             line = file.readline()
             for c in line:
                 if c != '\n':
