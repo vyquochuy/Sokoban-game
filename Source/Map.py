@@ -11,6 +11,28 @@ SCREEN_HEIGHT = 900
 pygame.init()
 pygame.display.set_caption("Ares's Adventure")
 
+<<<<<<< HEAD
+=======
+x= 1440
+y = 900
+SCREEN = pygame.display.set_mode((x, y))
+BG = pygame.image.load("img/background.png")
+BG = pygame.transform.scale(BG, (x, y))
+
+tile_size = 50
+
+# Load images
+wall = pygame.transform.scale(pygame.image.load("img/wall.png"), (tile_size, tile_size))
+floor = pygame.transform.scale(pygame.image.load('img/floor.png'), (tile_size, tile_size))
+stone = pygame.transform.scale(pygame.image.load('img/stone.png'), (tile_size, tile_size))
+box_docked = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (tile_size, tile_size))
+Ares = pygame.transform.scale(pygame.image.load('img/Ares.png').convert_alpha(), (tile_size, tile_size))
+Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'), (tile_size, tile_size))
+stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (tile_size, tile_size))
+background = 255, 226, 191
+
+
+>>>>>>> feature-2
 class Game:
     def is_valid_value(self, char):
         return char in [' ', '#', '@', '.', '+', '$', '*']
@@ -19,10 +41,17 @@ class Game:
         self.queue = queue.LifoQueue()
         self.matrix = []
         self.weights = []
+<<<<<<< HEAD
 
         with open(filename, 'r') as file:
             if not file:
                 print("ERROR: file " + filename + " not found")
+=======
+        
+        with open(filename,'r') as file:
+            if not file:
+                print ("ERROR: file " +filename+ "  not found")
+>>>>>>> feature-2
                 sys.exit(1)
 
             line = file.readline()
