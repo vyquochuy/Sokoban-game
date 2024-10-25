@@ -1,102 +1,125 @@
 import tkinter as tk
+from PIL import  Image, ImageTk
 
-# Mảng các thuật toán và bản đồ
 ALGORITHMS = ["BFS", "DFS", "USC", "A*"]
 MAPS = [f"Map {i}" for i in range(1, 11)]  # 10 bản đồ
 
+BUTTON_COLOR = "#D96D37"
+TITLE_SIZE = 36
+BUTTON_SIZE = 14
+
 class MenuPage(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, bg_image):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        # Định cấu hình hàng và cột để căn giữa
-        #self.grid_rowconfigure(0, weight=1)  # Căn giữa theo chiều dọc
-        #self.grid_rowconfigure(3, weight=1)  # Tạo khoảng trống ở dưới cùng
-        #self.grid_columnconfigure(0, weight=1)  # Căn giữa theo chiều ngang
+        background_label = tk.Label(self, image=bg_image)
+        background_label.place(relwidth=1, relheight=1)
+        
+        label = tk.Label(self, text="Ares’s adventure", font=("Helvetica", TITLE_SIZE),
+                         bg= BUTTON_COLOR, fg="white")
+        label.place(relx=0.5, rely=0.25, anchor="center")
+        
+        self.start_button = tk.Button(self, text="Bắt đầu với " + self.controller.algorithm,
+                                       font=("Helvetica", BUTTON_SIZE), bg=BUTTON_COLOR, fg="white",
+                                       command=self.go_to_map_selection, height=2, width=15)
+        self.start_button.place(relx=0.5, rely=0.4, anchor="center")
 
-        # Label
-        label = tk.Label(self, text="Ares’s adventure", font=controller.title_font)
-        label.grid(row=1, column=0, pady=100, padx=100, sticky="nsew")
-
-        # Button chọn thuật toán
         button1 = tk.Button(self, text="Chọn thuật toán",
-                            command=lambda: controller.show_frame("ChoosePage"), height=10, width=30)
-        button1.grid(row=2, column=0, pady=5, padx=5, sticky="nsew")
+                            font=("Helvetica", BUTTON_SIZE), bg=BUTTON_COLOR, fg="white",
+                            command=lambda: controller.show_frame("ChooseAlgorithm"), height=2, width=15)
+        button1.place(relx=0.5, rely=0.5, anchor="center")
 
-        # Button chọn bản đồ
-        button2 = tk.Button(self, text="Chọn bản đồ",
-                            command=lambda: controller.show_frame("MapPage"), height=10, width=30)
-        button2.grid(row=3, column=0, pady=5, padx=5, sticky="nsew")
+        # Button thoát
+        button2 = tk.Button(self, text="Thoát",
+                            font=("Helvetica", BUTTON_SIZE), bg=BUTTON_COLOR, fg="white",
+                            command=self.controller.quit, height=2, width=15)
+        button2.place(relx=0.5, rely=0.6, anchor="center")
 
+    def go_to_map_selection(self):
+        self.controller.show_frame("MapSelection")  # Chuyển đến trang chọn bản đồ
 
-class ChoosePage(tk.Frame):
-    def __init__(self, parent, controller):
+    def update_start_button(self):
+        self.start_button.config(text="Bắt đầu với " + self.controller.algorithm)
+
+class ChooseAlgorithm(tk.Frame):
+    def __init__(self, parent, controller, bg_image):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(10, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+        background_label = tk.Label(self, image=bg_image)
+        background_label.place(relwidth=1, relheight=1)
 
-        label = tk.Label(self, text="Chọn thuật toán", font=("Helvetica", 20))
-        label.grid(row=1, column=0, pady=20, sticky="nsew")
+        label = tk.Label(self, text="Chọn thuật toán", font=("Helvetica", TITLE_SIZE), bg=BUTTON_COLOR, fg="white")
+        label.place(relx=0.5, rely=0.2, anchor="center")
 
-        # Tạo các nút cho mỗi thuật toán
-        for idx, algo in enumerate(ALGORITHMS, start=2):
-            button = tk.Button(self, text=algo, command=lambda a=algo: self.choose_algorithm(a))
-            button.grid(row=idx, column=0, pady=5, padx=10, sticky="nsew")
+        for idx, algo in enumerate(ALGORITHMS):
+            button = tk.Button(self, text=algo, font=("Helvetica", BUTTON_SIZE), bg=BUTTON_COLOR, fg="white",
+                               command=lambda a=algo: self.choose_algorithm(a), height=2, width=15)
+            button.place(relx=0.5, rely=0.35 + idx * 0.1, anchor="center")
 
-        # Button quay lại menu
         button_back = tk.Button(self, text="Quay lại Menu",
-                                command=lambda: controller.show_frame("MenuPage"))
-        button_back.grid(row=len(ALGORITHMS) + 2, column=0, pady=10, sticky="nsew")
+                                command=lambda: controller.show_frame("MenuPage"), height=2, width=15)
+        button_back.place(relx=0.5, rely=0.35 + len(ALGORITHMS) * 0.1, anchor="center")
 
     def choose_algorithm(self, algo):
-        # Lưu thuật toán được chọn
         self.controller.algorithm = algo
         print(f"Thuật toán đã chọn: {algo}")
-        self.controller.show_frame("MenuPage")  # Quay lại menu
+        
+        # Cập nhật nút bắt đầu trong MenuPage
+        self.controller.frames["MenuPage"].update_start_button()
+        
+        self.controller.show_frame("MenuPage")
 
-
-class MapPage(tk.Frame):
-    def __init__(self, parent, controller):
+class MapSelection(tk.Frame):
+    def __init__(self, parent, controller, bg_image):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(12, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+        background_label = tk.Label(self, image=bg_image)
+        background_label.place(relwidth=1, relheight=1)
 
-        label = tk.Label(self, text="Chọn bản đồ", font=("Helvetica", 20))
-        label.grid(row=1, column=0, pady=20, sticky="nsew")
+        label = tk.Label(self, text="Chọn bản đồ", font=("Helvetica", TITLE_SIZE), bg=BUTTON_COLOR, fg="white")
+        label.place(relx=0.5, rely=0.15, anchor="center")
 
-        # Tạo các nút cho mỗi bản đồ
-        for idx, map_name in enumerate(MAPS, start=2):
-            button = tk.Button(self, text=map_name, command=lambda m=map_name: self.choose_map(m))
-            button.grid(row=idx, column=0, pady=5, padx=10, sticky="nsew")
 
-        # Button quay lại menu
+        for idx, map_name in enumerate(MAPS):
+            col = idx % 2  # Cột (0 hoặc 1)
+            row = idx // 2  # Hàng (tính toán từ chỉ số)
+            button = tk.Button(self, text=map_name, font=("Helvetica", BUTTON_SIZE), bg=BUTTON_COLOR, fg="white",
+                               command=lambda m=map_name: self.choose_map(m), height=2, width=15)
+            button.grid(row=row + 1, column=col, padx=10, pady=10)
+            self.grid_rowconfigure(0, weight=1)
+            self.grid_columnconfigure(0, weight=1)
+            self.grid_columnconfigure(1, weight=1)
+            
+        
+        
         button_back = tk.Button(self, text="Quay lại Menu",
-                                command=lambda: controller.show_frame("MenuPage"))
-        button_back.grid(row=len(MAPS) + 2, column=0, pady=10, sticky="nsew")
+                                command=lambda: controller.show_frame("MenuPage"), height=2, width=15)
+        button_back.grid(row=(len(MAPS) // 2) + 1, column=0, columnspan=2, pady=20)  # Đặt nút quay lại ở dưới cùng
 
     def choose_map(self, map_name):
-        # Lưu bản đồ được chọn
         self.controller.map_name = map_name
         print(f"Bản đồ đã chọn: {map_name}")
-        self.controller.show_frame("MenuPage")  # Quay lại menu
-
+        
+        # code tiếp ở đây ::))))))))))
 
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry("800x600")
+        self.geometry("1280x720")
         self.title("Ares’s adventure")
         self.title_font = ("Helvetica", 18)
         
-        # Biến lưu thuật toán và bản đồ đã chọn
-        self.algorithm = None
+        self.algorithm = ALGORITHMS[0]
         self.map_name = None
+
+        
+        bg_image = Image.open("img/Menu background.png")
+        bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
+        self.bg_image = ImageTk.PhotoImage(bg_image)
+        
 
         # Tạo container cho các trang
         container = tk.Frame(self)
@@ -108,20 +131,20 @@ class App(tk.Tk):
 
         # Khởi tạo các trang
         self.frames = {}
-        for Page in (MenuPage, ChoosePage, MapPage):
+        for Page in (MenuPage, ChooseAlgorithm, MapSelection):
             page_name = Page.__name__
-            frame = Page(parent=container, controller=self)
+            frame = Page(parent=container, controller=self, bg_image=self.bg_image)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame("MenuPage")  # Hiển thị trang MenuPage đầu tiên
+        self.show_frame("MenuPage") 
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
-        frame.tkraise()  # Đưa frame lên trên
-
+        frame.tkraise()
 
 def RunTest():
     app = App()
     app.mainloop()
+
 RunTest()
