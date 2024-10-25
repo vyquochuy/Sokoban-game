@@ -122,20 +122,16 @@ class Game:
 
         pygame.display.flip()
 
-# Khởi tạo trò chơi
 filename = input("Enter the level: ")
 game = Game('input/input-' + filename + '.txt')
 
-# Vòng lặp chính
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     
-    # Vẽ lại bản đồ
     game.draw_map()
 
-# Thoát pygame
 pygame.quit()
 sys.exit()
