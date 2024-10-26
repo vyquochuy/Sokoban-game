@@ -63,12 +63,12 @@ class Game:
 
         # Tải hình ảnh và thay đổi kích thước
         self.wall = pygame.transform.scale(pygame.image.load("img/wall.png"), (self.tile_size, self.tile_size))
+        self.Ares = pygame.transform.scale(pygame.image.load('img/Ares.png'), (self.tile_size, self.tile_size))
         self.floor = pygame.transform.scale(pygame.image.load('img/floor.png'), (self.tile_size, self.tile_size))
         self.stone = pygame.transform.scale(pygame.image.load('img/stone.png'), (self.tile_size, self.tile_size))
-        self.stone_on_stock = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (self.tile_size, self.tile_size))
-        self.Ares = pygame.transform.scale(pygame.image.load('img/Ares.png').convert_alpha(), (self.tile_size, self.tile_size))
-        self.Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'), (self.tile_size, self.tile_size))
         self.stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (self.tile_size, self.tile_size))
+        self.Ares_on_stock = pygame.transform.scale(pygame.image.load('img/Ares on stock.png'), (self.tile_size, self.tile_size))
+        self.stone_on_stock = pygame.transform.scale(pygame.image.load('img/stone on stock.png'), (self.tile_size, self.tile_size))
         
         self.font = pygame.font.SysFont(None, 24)
         
@@ -80,38 +80,21 @@ class Game:
                 
                 
     def in_wall(self, x, y):
-        # Kiểm tra có bao quanh bởi ít nhất 4 bức tường hay không
+        # Kiểm tra nếu tọa độ (x, y) nằm ở rìa ngoài của ma trận
         if x == 0 or y == 0 or x == len(self.matrix) - 1 or y == len(self.matrix[x]) - 1:
             return False
         
-        wall_count = 0
-        # qua phải
-        for i in range(y, len(self.matrix[x])):
-            if self.matrix[x][i] == '#':
-                wall_count += 1
-                break
-        # qua trái
-        for i in range(y, -1, -1):
-            if self.matrix[x][i] == '#':
-                wall_count += 1
-                break
-        # xuống dưới
-        for i in range(x, len(self.matrix)):
-            try:
-                if self.matrix[i][y] == '#':
-                    wall_count += 1
-                    break
-            except:
-                continue
-        # lên trên
-        for i in range(x, -1, -1):
-            try:
-                if self.matrix[i][y] == '#':
-                    wall_count += 1
-                    break
-            except:
-                continue
-        return wall_count >= 4
+        # sử dụng hàm try để bắt lỗi nếu x, y không hợp lệ
+        try:
+            checks = [
+                any(self.matrix[x][i] == '#' for i in range(y + 1, len(self.matrix[x]))),  # phải
+                any(self.matrix[i][y] == '#' for i in range(x + 1, len(self.matrix))),     # xuống
+                any(self.matrix[x][i] == '#' for i in range(y - 1, -1, -1)),               # trái
+                any(self.matrix[i][y] == '#' for i in range(x - 1, -1, -1))                # lên
+            ]
+        except:
+            return False
+        return all(checks)
     
     def draw_map(self):
         self.screen.fill((154, 126, 111))
