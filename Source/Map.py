@@ -19,6 +19,7 @@ class Game:
         self.queue = queue.LifoQueue()
         self.matrix = []
         self.weights = []
+        self.stones_positions = []
 
         with open(filename, 'r') as file:
             if not file:
@@ -39,13 +40,17 @@ class Game:
                 print("ERROR: Dòng đầu tiên rỗng hoặc không có dữ liệu.")
                 sys.exit(1)
 
-            for line in file:
+            stone_id = 0
+            for i, line in enumerate(file):
                 row = []
                 if line.strip() != "":
                     row = []
-                    for c in line:
+                    for j, c in enumerate(line):
                         if c != '\n' and self.is_valid_value(c):
                             row.append(c)
+                            if c in ['$', '*']:
+                                self.stones_positions.append({'pos': (i, j), 'weight': self.weights[stone_id]})
+                                stone_id += 1
                         elif c == '\n':
                             continue
                         else:
@@ -135,33 +140,32 @@ class Game:
                     self.screen.blit(self.stock, (j * self.tile_size, i * self.tile_size))
                 elif self.matrix[i][j] == '+':
                     self.screen.blit(self.Ares_on_stock, (j * self.tile_size, i * self.tile_size))
+                    
                 elif self.matrix[i][j] == '$':
                     self.screen.blit(self.stone, (j * self.tile_size, i * self.tile_size))
-                    if weight_index < len(self.weights):
-                        weight_text = str(self.weights[weight_index])
-                        weight_index += 1
-                        text_surface = self.font.render(weight_text, True, (255, 255, 255))  # Màu trắng
-                        text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
-                                                                  i * self.tile_size + self.tile_size // 2))
-                        self.screen.blit(text_surface, text_rect)  # Hiển thị trọng lượng trên hòn đá
-                        
+                    for stone in self.stones_positions:
+                        if stone['pos'] == (i, j):  # Kiểm tra vị trí viên đá
+                            weight_text = str(stone['weight'])
+                            text_surface = self.font.render(weight_text, True, (255, 255, 255))
+                            text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
+                                                                    i * self.tile_size + self.tile_size // 2))
+                            self.screen.blit(text_surface, text_rect)
+                            break
+                    
                 elif self.matrix[i][j] == '*':
-                    self.screen.blit(self.stone_on_stock, (j * self.tile_size, i * self.tile_size))
-                    if weight_index < len(self.weights):
-                        weight_text = str(self.weights[weight_index])
-                        weight_index += 1
-                        text_surface = self.font.render(weight_text, True, (255, 255 ,255))  # Màu trắng
-                        text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
-                                                                  i * self.tile_size + self.tile_size // 2))
-                        self.screen.blit(text_surface, text_rect)  # Hiển thị trọng lượng trên hòn đá
+                    self.screen.blit(self.stone_on_stock, (j * self.tile_size, i * self.tile_size))    
+                    for stone in self.stones_positions:
+                        if stone['pos'] == (i, j):  # Kiểm tra vị trí viên đá
+                            weight_text = str(stone['weight'])
+                            text_surface = self.font.render(weight_text, True, (255, 255, 255))
+                            text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
+                                                                    i * self.tile_size + self.tile_size // 2))
+                            self.screen.blit(text_surface, text_rect)
+                            break
+                
 
         pygame.display.flip()
 
-    def Ares_pos(self):
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
-                if self.matrix[i][j] == '@' or self.matrix[i][j] == '+':
-                    return (i, j)
                 
     def can_push(self, x, y, dx, dy):
         new_x, new_y = x + dx, y + dy
@@ -177,11 +181,16 @@ class Game:
         if self.matrix[new_x][new_y] == '#':
             return
         
-        if self.matrix[new_x][new_y] == '$' or self.matrix[new_x][new_y] == '*':
+        if self.matrix[new_x][new_y] in ['$', '*']:
             if self.can_push(new_x, new_y, dx, dy):
                 # Di chuyển cục đá
                 self.matrix[new_x][new_y] = ' ' if self.matrix[new_x][new_y] == '$' else '.'
                 self.matrix[new_x + dx][new_y + dy] = '*' if self.matrix[new_x + dx][new_y + dy] == '.' else '$'
+                for stone in self.stones_positions:
+                    if stone['pos'] == (new_x, new_y):
+                        # Cập nhật vị trí cục đá trong danh sách
+                        stone['pos'] = (new_x + dx, new_y + dy)
+                        break
             else:
                 return  # Không thể đẩy đá, dừng lại
 
@@ -190,8 +199,6 @@ class Game:
         self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
         self.Ares_pos = (new_x, new_y)
             
-
-    
         
 def run_game(filename):
     pygame.init()
