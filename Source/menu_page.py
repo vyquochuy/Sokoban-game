@@ -9,7 +9,6 @@ BUTTON_COLOR = "#D96D37"
 TITLE_SIZE = 36
 BUTTON_SIZE = 14
 
-
 class MenuPage(tk.Frame):
 
     def __init__(self, parent, controller, bg_image):

@@ -1,6 +1,5 @@
 import sys
 import pygame
-import queue
 
 # Kích thước MÀN HÌNH
 SCREEN_HEIGHT = 900
@@ -14,7 +13,6 @@ class Game:
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
     def __init__(self, filename):
-        self.queue = queue.LifoQueue()
         self.matrix = []
         self.weights = []
         self.stones_positions = []
