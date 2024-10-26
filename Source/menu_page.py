@@ -1,6 +1,7 @@
 import tkinter as tk
 import Map
 from PIL import Image, ImageTk
+import pygame
 
 ALGORITHMS = ["BFS", "DFS", "USC", "A*"]
 MAPS = [f"Map {i}" for i in range(1, 11)]  # 10 bản đồ
@@ -170,6 +171,9 @@ class MapSelection(tk.Frame):
             filepath = f"input/input-{map_number}.txt"
 
         map = Map.run_game(filepath)
+        pygame.mixer.init()
+        pygame.mixer.music.load("sound/menu_sound.mp3")
+        pygame.mixer.music.play(-1)
 
 
 class App(tk.Tk):
@@ -186,6 +190,11 @@ class App(tk.Tk):
         bg_image = Image.open("img/Menu background.png")
         bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_image)
+
+        # Initialize pygame mixer
+        pygame.mixer.init()
+        pygame.mixer.music.load("sound/menu_sound.mp3")
+        pygame.mixer.music.play(-1)
 
         # Tạo container cho các trang
         container = tk.Frame(self)
@@ -212,9 +221,9 @@ class App(tk.Tk):
         frame.tkraise()
 
 
-def RunTest():
+def run_game():
     app = App()
     app.mainloop()
 
 
-RunTest()
+run_game()

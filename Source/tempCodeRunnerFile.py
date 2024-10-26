@@ -1,1 +1,2 @@
-Menu background.png
+
+self.algorithm = ALGORITHMS[0]
