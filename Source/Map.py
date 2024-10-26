@@ -2,13 +2,11 @@ import sys
 import pygame
 import queue
 
-
 # Kích thước MÀN HÌNH
 SCREEN_HEIGHT = 900
 SCREEN_WIDTH = 900
 
-# khởi tạo pygame
-pygame.init()
+# tên game
 pygame.display.set_caption("Ares's Adventure")
 
 class Game:
@@ -28,11 +26,11 @@ class Game:
 
             # Đọc và xử lý dòng đầu tiên
             line = file.readline().strip()
-            if line:  # Kiểm tra nếu dòng đầu tiên không trống
-                numbers = line.split()  # Tách các số trong dòng dựa trên khoảng trắng
+            if line:
+                numbers = line.split()
                 try:
                     for number in numbers:
-                        self.weights.append(int(number))  # Lưu số vào danh sách weights dưới dạng số nguyên
+                        self.weights.append(int(number))
                 except ValueError as e:
                     print(f"ERROR: Dòng đầu tiên chứa giá trị không hợp lệ. Chi tiết lỗi: {e}")
                     sys.exit(1)
@@ -94,13 +92,11 @@ class Game:
             if self.matrix[x][i] == '#':
                 wall_count += 1
                 break
-            
         # qua trái
         for i in range(y, -1, -1):
             if self.matrix[x][i] == '#':
                 wall_count += 1
                 break
-            
         # xuống dưới
         for i in range(x, len(self.matrix)):
             try:
@@ -109,7 +105,6 @@ class Game:
                     break
             except:
                 continue
-            
         # lên trên
         for i in range(x, -1, -1):
             try:
@@ -122,8 +117,6 @@ class Game:
     
     def draw_map(self):
         self.screen.fill((154, 126, 111))
-        
-        weight_index = 0
         
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
@@ -141,31 +134,22 @@ class Game:
                 elif self.matrix[i][j] == '+':
                     self.screen.blit(self.Ares_on_stock, (j * self.tile_size, i * self.tile_size))
                     
-                elif self.matrix[i][j] == '$':
-                    self.screen.blit(self.stone, (j * self.tile_size, i * self.tile_size))
+                elif self.matrix[i][j] in ['$', '*']:
+                    if self.matrix[i][j] == '$':
+                        self.screen.blit(self.stone, (j * self.tile_size, i * self.tile_size))
+                    else:
+                        self.screen.blit(self.stone_on_stock, (j * self.tile_size, i * self.tile_size))
+                        
                     for stone in self.stones_positions:
-                        if stone['pos'] == (i, j):  # Kiểm tra vị trí viên đá
+                        if stone['pos'] == (i, j):
                             weight_text = str(stone['weight'])
                             text_surface = self.font.render(weight_text, True, (255, 255, 255))
                             text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
                                                                     i * self.tile_size + self.tile_size // 2))
                             self.screen.blit(text_surface, text_rect)
                             break
-                    
-                elif self.matrix[i][j] == '*':
-                    self.screen.blit(self.stone_on_stock, (j * self.tile_size, i * self.tile_size))    
-                    for stone in self.stones_positions:
-                        if stone['pos'] == (i, j):  # Kiểm tra vị trí viên đá
-                            weight_text = str(stone['weight'])
-                            text_surface = self.font.render(weight_text, True, (255, 255, 255))
-                            text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
-                                                                    i * self.tile_size + self.tile_size // 2))
-                            self.screen.blit(text_surface, text_rect)
-                            break
-                
 
         pygame.display.flip()
-
                 
     def can_push(self, x, y, dx, dy):
         new_x, new_y = x + dx, y + dy
@@ -173,7 +157,6 @@ class Game:
             return False
         return self.matrix[new_x][new_y] in [' ', '.']
     
-    # animation move
     def move(self, dx, dy):
         x, y = self.Ares_pos
         new_x, new_y = x + dx, y + dy
@@ -199,18 +182,27 @@ class Game:
         self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
         self.Ares_pos = (new_x, new_y)
             
-        
+    def is_win(self):
+        for line in self.matrix:
+            if '.' in line:
+                return False
+        return True
+
+    
 def run_game(filename):
     pygame.init()
     pygame.font.init()
     
     m = Game(filename)
     running = True
+    font = pygame.font.SysFont(None, 60) 
+    win_message_displayed = False
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN and not win_message_displayed:
                 if event.key == pygame.K_UP:
                     m.move(-1, 0)
                 elif event.key == pygame.K_DOWN:
@@ -219,7 +211,16 @@ def run_game(filename):
                     m.move(0, -1)
                 elif event.key == pygame.K_RIGHT:
                     m.move(0, 1)
-                    
+
         m.draw_map()
+        if m.is_win() and not win_message_displayed:
+            win_message_displayed = True
+            text_surface = font.render("You Win!", True, (0, 255, 0))
+            text_rect = text_surface.get_rect(center=(m.screen.get_width() // 2, m.screen.get_height() // 2))
+            m.screen.blit(text_surface, text_rect)
+            pygame.display.flip()
+            pygame.time.wait(2000)
+            running = False
+
 
     pygame.quit()
