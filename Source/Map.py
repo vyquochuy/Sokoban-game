@@ -11,7 +11,7 @@ SCREEN_WIDTH = 900
 pygame.init()
 pygame.display.set_caption("Ares's Adventure")
 
-class map:
+class Game:
     def is_valid_value(self, char):
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
@@ -70,6 +70,14 @@ class map:
         self.stock = pygame.transform.scale(pygame.image.load('img/stock.png'), (self.tile_size, self.tile_size))
         
         self.font = pygame.font.SysFont(None, 24)
+        
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if self.matrix[i][j] == '@' or self.matrix[i][j] == '+':
+                    self.Ares_pos = (i, j)
+                    break
+                
+                
     def in_wall(self, x, y):
         # Kiểm tra có bao quanh bởi ít nhất 4 bức tường hay không
         if x == 0 or y == 0 or x == len(self.matrix) - 1 or y == len(self.matrix[x]) - 1:
@@ -149,22 +157,62 @@ class map:
 
         pygame.display.flip()
 
+    def Ares_pos(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if self.matrix[i][j] == '@' or self.matrix[i][j] == '+':
+                    return (i, j)
+                
+    def can_push(self, x, y, dx, dy):
+        new_x, new_y = x + dx, y + dy
+        if not self.in_wall(new_x, new_y):
+            return False
+        return self.matrix[new_x][new_y] in [' ', '.']
+    
     # animation move
-    def move(self):
-        print("move")
+    def move(self, dx, dy):
+        x, y = self.Ares_pos
+        new_x, new_y = x + dx, y + dy
         
+        if self.matrix[new_x][new_y] == '#':
+            return
+        
+        if self.matrix[new_x][new_y] == '$' or self.matrix[new_x][new_y] == '*':
+            if self.can_push(new_x, new_y, dx, dy):
+                # Di chuyển cục đá
+                self.matrix[new_x][new_y] = ' ' if self.matrix[new_x][new_y] == '$' else '.'
+                self.matrix[new_x + dx][new_y + dy] = '*' if self.matrix[new_x + dx][new_y + dy] == '.' else '$'
+            else:
+                return  # Không thể đẩy đá, dừng lại
 
+        # Di chuyển Ares
+        self.matrix[x][y] = '.' if self.matrix[x][y] == '+' else ' '
+        self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
+        self.Ares_pos = (new_x, new_y)
+            
+
+    
+        
 def run_game(filename):
     pygame.init()
     pygame.font.init()
     
-    m = map(filename)
+    m = Game(filename)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-    
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    m.move(-1, 0)
+                elif event.key == pygame.K_DOWN:
+                    m.move(1, 0)
+                elif event.key == pygame.K_LEFT:
+                    m.move(0, -1)
+                elif event.key == pygame.K_RIGHT:
+                    m.move(0, 1)
+                    
         m.draw_map()
 
     pygame.quit()
