@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 import sys
 import pygame
 
 # Kích thước MÀN HÌNH
-SCREEN_HEIGHT = 900
-SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 720
 
 # tên game
 pygame.display.set_caption("Ares's Adventure")
