@@ -14,6 +14,7 @@ class Game:
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
     def __init__(self, filename):
+        self.cost = 0
         self.matrix = []
         self.weights = []
         self.stones_positions = []
@@ -145,7 +146,7 @@ class Game:
         
         if self.matrix[new_x][new_y] == '#':
             return
-        
+        # đẩy đá nếu có thể
         if self.matrix[new_x][new_y] in ['$', '*']:
             if self.can_push(new_x, new_y, dx, dy):
                 # Di chuyển cục đá
@@ -155,6 +156,7 @@ class Game:
                     if stone['pos'] == (new_x, new_y):
                         # Cập nhật vị trí cục đá trong danh sách
                         stone['pos'] = (new_x + dx, new_y + dy)
+                        self.cost += stone['weight']
                         break
             else:
                 return  # Không thể đẩy đá, dừng lại
@@ -163,7 +165,17 @@ class Game:
         self.matrix[x][y] = '.' if self.matrix[x][y] == '+' else ' '
         self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
         self.Ares_pos = (new_x, new_y)
+        self.cost += 1
             
+    def move_left(self):
+        self.move(0, -1)
+    def move_right(self):
+        self.move(0, 1)
+    def move_up(self):
+        self.move(-1, 0)
+    def move_down(self):
+        self.move(1, 0)        
+    
     def is_win(self):
         for line in self.matrix:
             if '.' in line:
@@ -186,14 +198,15 @@ def run_game(filename):
                 running = False
             elif event.type == pygame.KEYDOWN and not win_message_displayed:
                 if event.key == pygame.K_UP:
-                    m.move(-1, 0)
+                    m.move_up()
                 elif event.key == pygame.K_DOWN:
-                    m.move(1, 0)
+                    m.move_down()
                 elif event.key == pygame.K_LEFT:
-                    m.move(0, -1)
+                    m.move_left()
                 elif event.key == pygame.K_RIGHT:
-                    m.move(0, 1)
-
+                    m.move_right()
+                print(f"Cost: {m.cost}")
+            
         m.draw_map()
         if m.is_win() and not win_message_displayed:
             win_message_displayed = True
@@ -204,5 +217,5 @@ def run_game(filename):
             pygame.time.wait(2000)
             running = False
 
-
+    
     pygame.quit()
