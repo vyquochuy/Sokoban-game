@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 import sys
 import pygame
+sys.stdout.reconfigure(encoding='utf-8')
 
 # Kích thước MÀN HÌNH
 SCREEN_HEIGHT = 720
