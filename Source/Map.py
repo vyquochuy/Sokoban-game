@@ -139,6 +139,7 @@ class Game:
         if not self.in_wall(new_x, new_y):
             return False
         return self.matrix[new_x][new_y] in [' ', '.']
+       
     
     def move(self, dx, dy):
         x, y = self.Ares_pos
