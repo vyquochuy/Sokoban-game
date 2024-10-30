@@ -32,10 +32,10 @@ class Game:
                     for number in numbers:
                         self.weights.append(int(number))
                 except ValueError as e:
-                    print(f"ERROR: Dòng đầu tiên chứa giá trị không hợp lệ. Chi tiết lỗi: {e}")
+                    print(f"ERROR: The first line contains invalid values. Error details: {e}")
                     sys.exit(1)
             else:
-                print("ERROR: Dòng đầu tiên rỗng hoặc không có dữ liệu.")
+                print("ERROR: The first line is empty or contains no data.")
                 sys.exit(1)
 
             stone_id = 0
@@ -180,6 +180,8 @@ class Game:
     def is_win(self):
         for line in self.matrix:
             if '.' in line:
+                return False
+            if '$' in line:
                 return False
         return True
 
