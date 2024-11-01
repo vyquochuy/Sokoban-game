@@ -1,7 +1,11 @@
 import tkinter as tk
 import Map
-from PIL import Image, ImageTk
+import solver
 import pygame
+from PIL import Image, ImageTk
+
+pygame.init()
+pygame.font.init()
 
 # Constants
 ALGORITHMS = ["BFS", "DFS", "USC", "A*"]
@@ -13,7 +17,6 @@ BUTTON_SIZE = 14
 GEOMETRY = "1280x720"
 TITLE_FONT = "Impact"
 BUTTON_FONT = "Helvetica"
-
 
 class MenuPage(tk.Frame):
 
@@ -173,10 +176,22 @@ class MapSelection(tk.Frame):
         map_number = int(map_name.split()[-1])
         if map_number != 10:
             filepath = f"input/input-0{map_number}.txt"
+            output_path = f"output/output-0{map_number}.txt"
         else:
             filepath = f"input/input-{map_number}.txt"
+            output_path = f"output/output-{map_number}.txt"
 
-        map = Map.run_game(filepath)
+        map = Map.init_game(filepath)
+        map.draw_map()
+        
+        sol = solver.choose_Algo(self.controller.algorithm, map.matrix, map.weights)
+        sol.solve()
+        with open(output_path, 'w') as file:
+            file.write(self.controller.algorithm + '\n')
+            for line in sol.path:
+                file.write(str(line) + '\n')
+                
+        
         pygame.mixer.init()
         pygame.mixer.music.load("sound/menu_sound.mp3")
         pygame.mixer.music.play(-1)
@@ -230,6 +245,5 @@ class App(tk.Tk):
 def run_game():
     app = App()
     app.mainloop()
-
 
 run_game()

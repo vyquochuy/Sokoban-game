@@ -1,5 +1,6 @@
 import sys
 import pygame
+# import menu
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Kích thước MÀN HÌNH
@@ -128,7 +129,7 @@ class Game:
                             weight_text = str(stone['weight'])
                             text_surface = self.font.render(weight_text, True, (255, 255, 255))
                             text_rect = text_surface.get_rect(center=(j * self.tile_size + self.tile_size // 2, 
-                                                                    i * self.tile_size + self.tile_size // 2))
+                                                                      i * self.tile_size + self.tile_size // 2))
                             self.screen.blit(text_surface, text_rect)
                             break
 
@@ -179,46 +180,44 @@ class Game:
     
     def is_win(self):
         for line in self.matrix:
-            if '.' in line:
-                return False
             if '$' in line:
                 return False
         return True
 
-    
-def run_game(filename):
-    pygame.init()
-    pygame.font.init()
-    
-    m = Game(filename)
-    running = True
-    font = pygame.font.SysFont(None, 60) 
-    win_message_displayed = False
+    def run_game():
+               
+        running = True
+        font = pygame.font.SysFont(None, 60)
+        win_message_displayed = False
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    
+                # elif event.type == pygame.KEYDOWN and not win_message_displayed:
+                #     if event.key == pygame.K_UP:
+                #         m.move_up()
+                #     elif event.key == pygame.K_DOWN:
+                #         m.move_down()
+                #     elif event.key == pygame.K_LEFT:
+                #         m.move_left()
+                #     elif event.key == pygame.K_RIGHT:
+                #         m.move_right()
+                #     print(f"Cost: {m.cost}")
+                
+            draw_map()
+            if m.is_win() and not win_message_displayed:
+                win_message_displayed = True
+                text_surface = font.render("You Win!", True, (0, 255, 0))
+                text_rect = text_surface.get_rect(center=(m.screen.get_width() // 2, m.screen.get_height() // 2))
+                m.screen.blit(text_surface, text_rect)
+                pygame.display.flip()
+                pygame.time.wait(2000)
                 running = False
-            elif event.type == pygame.KEYDOWN and not win_message_displayed:
-                if event.key == pygame.K_UP:
-                    m.move_up()
-                elif event.key == pygame.K_DOWN:
-                    m.move_down()
-                elif event.key == pygame.K_LEFT:
-                    m.move_left()
-                elif event.key == pygame.K_RIGHT:
-                    m.move_right()
-                print(f"Cost: {m.cost}")
-            
-        m.draw_map()
-        if m.is_win() and not win_message_displayed:
-            win_message_displayed = True
-            text_surface = font.render("You Win!", True, (0, 255, 0))
-            text_rect = text_surface.get_rect(center=(m.screen.get_width() // 2, m.screen.get_height() // 2))
-            m.screen.blit(text_surface, text_rect)
-            pygame.display.flip()
-            pygame.time.wait(2000)
-            running = False
-
+                
+        pygame.quit()
     
-    pygame.quit()
+def init_game(filename):
+    return Game(filename)
+    
