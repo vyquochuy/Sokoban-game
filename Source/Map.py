@@ -16,6 +16,7 @@ class Game:
 
     def __init__(self, filename):
         self.cost = 0
+        self.path = []
         self.matrix = []
         self.weights = []
         self.stones_positions = []
@@ -168,6 +169,7 @@ class Game:
         self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
         self.Ares_pos = (new_x, new_y)
         self.cost += 1
+        
             
     def move_left(self):
         self.move(0, -1)
@@ -184,40 +186,57 @@ class Game:
                 return False
         return True
 
-    def run_game():
-               
+    def run_game(self, solution):
+        for word in solution:
+            for char in word:
+                if char in ['r', 'R', 'l', 'L', 'u', 'U', 'd', 'D']:
+                    self.path.append(char)
+                    
         running = True
         font = pygame.font.SysFont(None, 60)
         win_message_displayed = False
-
+        
         while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+            pygame.time.wait(500)
+            
+            for char in self.path:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        
+                if not running:
+                    break
+                
+                if char in ['r', 'R']:
+                    self.move_right()
+                elif char in ['l', 'L']:
+                    self.move_left()
+                elif char in ['u', 'U']:
+                    self.move_up()
+                elif char in ['d', 'D']:
+                    self.move_down()
+
+                print(f"Cost: {self.cost}")
+
+                self.draw_map()
+                pygame.time.wait(100)
+                
+                if self.is_win() and not win_message_displayed:
+                    win_message_displayed = True
+                    text_surface = font.render("You Win!", True, (0, 255, 0))
+                    text_rect = text_surface.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+                    self.screen.blit(text_surface, text_rect)
+                    pygame.display.flip()
+                    pygame.time.wait(2000)
                     running = False
-                    
-                # elif event.type == pygame.KEYDOWN and not win_message_displayed:
-                #     if event.key == pygame.K_UP:
-                #         m.move_up()
-                #     elif event.key == pygame.K_DOWN:
-                #         m.move_down()
-                #     elif event.key == pygame.K_LEFT:
-                #         m.move_left()
-                #     elif event.key == pygame.K_RIGHT:
-                #         m.move_right()
-                #     print(f"Cost: {m.cost}")
-                
-            draw_map()
-            if m.is_win() and not win_message_displayed:
-                win_message_displayed = True
-                text_surface = font.render("You Win!", True, (0, 255, 0))
-                text_rect = text_surface.get_rect(center=(m.screen.get_width() // 2, m.screen.get_height() // 2))
-                m.screen.blit(text_surface, text_rect)
-                pygame.display.flip()
-                pygame.time.wait(2000)
-                running = False
-                
+                    break
+
         pygame.quit()
     
 def init_game(filename):
+    pygame.init()
+    pygame.font.init()
     return Game(filename)
     

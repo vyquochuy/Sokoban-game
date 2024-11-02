@@ -184,13 +184,10 @@ class MapSelection(tk.Frame):
         map = Map.init_game(filepath)
         map.draw_map()
         
-        sol = solver.choose_Algo(self.controller.algorithm, map.matrix, map.weights)
-        sol.solve()
-        with open(output_path, 'w') as file:
-            file.write(self.controller.algorithm + '\n')
-            for line in sol.path:
-                file.write(str(line) + '\n')
-                
+        solution = solver.run(self.controller.algorithm, map.matrix, map.weights)
+        print(str(solution) + "\n")
+        map.run_game(str(solution))
+        
         
         pygame.mixer.init()
         pygame.mixer.music.load("sound/menu_sound.mp3")

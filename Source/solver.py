@@ -3,7 +3,8 @@ import copy
 import os
 import time
 
-class DFSSolver:
+
+class Solver:
     def __init__(self, matrix, stone_weights):
         self.stone_weights = stone_weights
         self.maxRowLength = max(len(row) for row in matrix)
@@ -38,7 +39,7 @@ class DFSSolver:
                     self.boxRobot[i][j] = '@'
                     self.wallsStorageSpaces[i][j] = '.'
 
-    def solve(self):
+    def dfs(self):
         print("Solving using DFS")
         time_start = time.perf_counter()
 
@@ -90,7 +91,6 @@ class DFSSolver:
                                 curPositionCopy[robotNew_x][robotNew_y] = '@'  # Move the robot
                                 curPositionCopy[robot_x][robot_y] = ' '  # Clear old robot position
                                 
-                                
                                 if curPositionCopy not in self.visitedMoves:
                                     matches = 0
                                     for k in range(self.lines):
@@ -120,20 +120,21 @@ class DFSSolver:
                                 self.queue.appendleft([curPositionCopy, movesTillNowCopy])
                                 self.visitedMoves.append(curPositionCopy)
                                 
-        
         if self.completed == 0:
-            print("Can't make it")
-
+            print("Can't make it")  
+            return None
         time_end = time.perf_counter()
         print(f"Run time: {time_end - time_start}")
-
-        if self.completed == 0:
-            print("Can't make it")
-        time_end = time.perf_counter()
-        print(f"Run time: {time_end - time_start}")
-        
-def choose_Algo(algo, matrix, stone_weights):
+        return self.path
+            
+def run(algo, matrix, stone_weights):
     if algo == "DFS":
-        return DFSSolver(matrix, stone_weights)
+        return Solver(matrix, stone_weights).dfs()
+    elif algo == "BFS":
+        return Solver(matrix, stone_weights).bfs()
+    elif algo == "UCS":
+        return Solver(matrix, stone_weights).ucs()
+    elif algo == "A*":
+        return Solver(matrix, stone_weights).Astar()
     else:
         return None
