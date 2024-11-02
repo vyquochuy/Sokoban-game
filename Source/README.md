@@ -1,4 +1,5 @@
 # Sokoban-game
 
 pip install pygame
-pip install Pillow
+pip install pillow
+pip install psutil

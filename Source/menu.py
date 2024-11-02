@@ -8,7 +8,7 @@ pygame.init()
 pygame.font.init()
 
 # Constants
-ALGORITHMS = ["BFS", "DFS", "USC", "A*"]
+ALGORITHMS = ["BFS", "DFS", "UCS", "A*"]
 MAPS = [f"Map {i}" for i in range(1, 11)]  # 10 maps
 
 BUTTON_COLOR = "#D96D37"
@@ -121,7 +121,6 @@ class ChooseAlgorithm(tk.Frame):
 
         # Update start button in MenuPage
         self.controller.frames["MenuPage"].update_start_button()
-
         self.controller.show_frame("MenuPage")
 
 
@@ -171,6 +170,7 @@ class MapSelection(tk.Frame):
 
     def choose_map(self, map_name):
         self.controller.map_name = map_name
+        algo = self.controller.algorithm
         print(f"Chosen map: {map_name}")
 
         map_number = int(map_name.split()[-1])
@@ -183,17 +183,17 @@ class MapSelection(tk.Frame):
 
         map = Map.init_game(filepath)
         map.draw_map()
+        solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
+        run = map.run_game(solution)
         
-        solution = solver.run(self.controller.algorithm, map.matrix, map.weights)
-        print(str(solution) + "\n")
-        map.run_game(str(solution))
-        
-        
-        pygame.mixer.init()
-        pygame.mixer.music.load("sound/menu_sound.mp3")
-        pygame.mixer.music.play(-1)
-
-
+        if run:
+            with open(output_path, "w") as f:
+                f.write(f"Algorithm:{algo} \n")
+                f.write(f"steps:{len(map.path)} Weight:{map.total_weight} ")
+                f.write(f"Node:{numberOfNode} Time (ms):{run_time} Memory:{memory_usage} MB\n" )
+                f.write(f"Path:{map.path} \n") 
+                
+    
 class App(tk.Tk):
 
     def __init__(self):

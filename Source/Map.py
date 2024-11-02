@@ -1,6 +1,10 @@
 import sys
 import pygame
-# import menu
+import collections
+import copy
+import os
+import time
+import solver
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Kích thước MÀN HÌNH
@@ -15,10 +19,12 @@ class Game:
         return char in [' ', '#', '@', '.', '+', '$', '*']
 
     def __init__(self, filename):
-        self.cost = 0
+        self.total_cost = 0
+        self.total_weight = 0
+        self.visitedNodes = 0
         self.path = []
         self.matrix = []
-        self.weights = []
+        self.stones_weight = []
         self.stones_positions = []
 
         with open(filename, 'r') as file:
@@ -32,7 +38,7 @@ class Game:
                 numbers = line.split()
                 try:
                     for number in numbers:
-                        self.weights.append(int(number))
+                        self.stones_weight.append(int(number))
                 except ValueError as e:
                     print(f"ERROR: The first line contains invalid values. Error details: {e}")
                     sys.exit(1)
@@ -49,7 +55,7 @@ class Game:
                         if c != '\n' and self.is_valid_value(c):
                             row.append(c)
                             if c in ['$', '*']:
-                                self.stones_positions.append({'pos': (i, j), 'weight': self.weights[stone_id]})
+                                self.stones_positions.append({'pos': (i, j), 'weight': self.stones_weight[stone_id]})
                                 stone_id += 1
                         elif c == '\n':
                             continue
@@ -133,7 +139,26 @@ class Game:
                                                                       i * self.tile_size + self.tile_size // 2))
                             self.screen.blit(text_surface, text_rect)
                             break
+        
+        # Draw total_cost and total weight in a separate box
+        cost_box_width = 200
+        cost_box_height = 60
+        cost_box_x = (self.screen.get_width() - cost_box_width) // 2
+        cost_box_y = 10
 
+        pygame.draw.rect(self.screen, (0, 0, 0), (cost_box_x, cost_box_y, cost_box_width, cost_box_height))
+        pygame.draw.rect(self.screen, (255, 255, 255), (cost_box_x, cost_box_y, cost_box_width, cost_box_height), 2)
+
+        cost_text = f"Total Cost: {self.total_cost}"
+        text_surface = self.font.render(cost_text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(cost_box_x + cost_box_width // 2, cost_box_y + cost_box_height // 2))
+        self.screen.blit(text_surface, text_rect)
+        
+        total_weight_text = f"Total Weight: {self.total_weight}"
+        total_weight_surface = self.font.render(total_weight_text, True, (255, 255, 255))
+        total_weight_rect = total_weight_surface.get_rect(center=(cost_box_x + cost_box_width // 2, cost_box_y + cost_box_height // 2 + 20))
+        self.screen.blit(total_weight_surface, total_weight_rect)
+        
         pygame.display.flip()
                 
     def can_push(self, x, y, dx, dy):
@@ -159,7 +184,8 @@ class Game:
                     if stone['pos'] == (new_x, new_y):
                         # Cập nhật vị trí cục đá trong danh sách
                         stone['pos'] = (new_x + dx, new_y + dy)
-                        self.cost += stone['weight']
+                        self.total_cost += stone['weight']
+                        self.total_weight += stone['weight']
                         break
             else:
                 return  # Không thể đẩy đá, dừng lại
@@ -168,7 +194,7 @@ class Game:
         self.matrix[x][y] = '.' if self.matrix[x][y] == '+' else ' '
         self.matrix[new_x][new_y] = '@' if self.matrix[new_x][new_y] == ' ' else '+'
         self.Ares_pos = (new_x, new_y)
-        self.cost += 1
+        self.total_cost += 1
         
             
     def move_left(self):
@@ -187,15 +213,25 @@ class Game:
         return True
 
     def run_game(self, solution):
-        for word in solution:
-            for char in word:
-                if char in ['r', 'R', 'l', 'L', 'u', 'U', 'd', 'D']:
-                    self.path.append(char)
-                    
-        running = True
         font = pygame.font.SysFont(None, 60)
+        running = True
         win_message_displayed = False
         
+        if not solution:
+            text_surface = font.render("UNSOLVABLE WITH CURRENT ALGORITHM", True, (255, 0, 0))
+            text_rect = text_surface.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+            self.screen.blit(text_surface, text_rect)
+            pygame.display.flip()
+            pygame.time.wait(2000)
+            running = False
+            pygame.quit()
+            return False
+        else:
+            for word in solution:
+                for char in word:
+                    if char in ['r', 'R', 'l', 'L', 'u', 'U', 'd', 'D']:
+                        self.path.append(char)
+            
         while running:
             pygame.time.wait(500)
             
@@ -218,10 +254,8 @@ class Game:
                 elif char in ['d', 'D']:
                     self.move_down()
 
-                print(f"Cost: {self.cost}")
-
                 self.draw_map()
-                pygame.time.wait(100)
+                pygame.time.wait(200)
                 
                 if self.is_win() and not win_message_displayed:
                     win_message_displayed = True
@@ -234,9 +268,21 @@ class Game:
                     break
 
         pygame.quit()
+        return True
     
 def init_game(filename):
     pygame.init()
     pygame.font.init()
     return Game(filename)
-    
+
+def solve(algo, Map):
+    if algo == "DFS":
+        return solver.Solver(Map).dfs()
+    elif algo == "BFS":
+        return solver.Solver(Map).bfs()
+    elif algo == "UCS":
+        return solver.Solver(Map).ucs()
+    elif algo == "A*":
+        return solver.Solver(Map).Astar()
+    else:
+        return None
