@@ -1,0 +1,3 @@
+Algorithm:A* 
+steps:28 Weight:552 Node:12822 Time (ms):86722.9433 Memory:27.29296875 MB
+Path:['l', 'u', 'L', 'L', 'L', 'd', 'l', 'U', 'U', 'U', 'r', 'r', 'r', 'r', 'D', 'l', 'd', 'd', 'r', 'r', 'u', 'L', 'L', 'L', 'L', 'd', 'l', 'U'] 
