@@ -520,4 +520,4 @@ class Solver:
                             queue.put((self.manhattan(curPositionCopy, storages)+ boxRobtDistance+storagesLeft*2+stepsTillNow,[curPositionCopy,movesTillNowCopy]))
                             self.visitedMoves.append(curPositionCopy)
                             
-        return self.complete(time_start, memmory_start)
+        return self.complete(time_start, memory_start)

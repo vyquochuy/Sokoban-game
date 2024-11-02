@@ -209,11 +209,6 @@ class App(tk.Tk):
         bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_image)
 
-        # Initialize pygame mixer
-        pygame.mixer.init()
-        pygame.mixer.music.load("sound/menu_sound.mp3")
-        pygame.mixer.music.play(-1)
-
         # Create container for pages
         container = tk.Frame(self)
         container.pack(fill="both", expand=True)
