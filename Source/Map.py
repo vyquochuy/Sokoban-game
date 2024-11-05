@@ -146,7 +146,7 @@ class Game:
         cost_box_x = (self.screen.get_width() - cost_box_width) // 2
         cost_box_y = 10
 
-        pygame.draw.rect(self.screen, (0, 0, 0), (cost_box_x, cost_box_y, cost_box_width, cost_box_height))
+        pygame.draw.rect(self.screen, (155, 155, 111), (cost_box_x, cost_box_y, cost_box_width, cost_box_height))
         pygame.draw.rect(self.screen, (255, 255, 255), (cost_box_x, cost_box_y, cost_box_width, cost_box_height), 2)
 
         cost_text = f"Total Cost: {self.total_cost}"

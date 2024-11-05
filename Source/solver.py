@@ -271,7 +271,7 @@ class Solver:
                         temp = 9999999
                         for storage in storages:
                             distanceToNearest = abs(storage[0] - i) + abs(storage[1] - j)
-                            temp = min(temp, distanceToNearest)
+                            temp = min(temp, distanceToNearest) + 1
                         distance += temp
         return distance
     

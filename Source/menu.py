@@ -182,6 +182,7 @@ class MapSelection(tk.Frame):
 
         map = Map.init_game(filepath)
         map.draw_map()
+        
         solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
         run = map.run_game(solution)
 
