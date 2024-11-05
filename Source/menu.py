@@ -9,7 +9,7 @@ pygame.font.init()
 
 # Constants
 ALGORITHMS = ["BFS", "DFS", "UCS", "A*"]
-MAPS = [f"Map {i}" for i in range(1, 11)]  # 10 maps
+MAPS = [f"Map {i}" for i in range(1, 11)]
 
 BUTTON_COLOR = "#D96D37"
 TITLE_SIZE = 36
@@ -17,6 +17,7 @@ BUTTON_SIZE = 14
 GEOMETRY = "1280x720"
 TITLE_FONT = "Impact"
 BUTTON_FONT = "Helvetica"
+
 
 class MenuPage(tk.Frame):
 
@@ -27,29 +28,28 @@ class MenuPage(tk.Frame):
         background_label = tk.Label(self, image=bg_image)
         background_label.place(relwidth=1, relheight=1)
 
-        label = tk.Label(
-            self,
-            text="Ares’s Adventure",
-            font=(TITLE_FONT, TITLE_SIZE),  # Sử dụng TITLE_FONT
-            bg=BUTTON_COLOR,
-            fg="white")
+        label = tk.Label(self,
+                         text="Ares’s Adventure",
+                         font=(TITLE_FONT, TITLE_SIZE),
+                         bg=BUTTON_COLOR,
+                         fg="white")
         label.place(relx=0.5, rely=0.25, anchor="center")
 
-        self.start_button = tk.Button(
-            self,
-            text="Start with " + self.controller.algorithm,
-            font=(BUTTON_FONT, BUTTON_SIZE),  # Sử dụng BUTTON_FONT
-            bg=BUTTON_COLOR,
-            fg="white",
-            command=self.go_to_map_selection,
-            height=2,
-            width=15)
+        self.start_button = tk.Button(self,
+                                      text="Start with " +
+                                      self.controller.algorithm,
+                                      font=(BUTTON_FONT, BUTTON_SIZE),
+                                      bg=BUTTON_COLOR,
+                                      fg="white",
+                                      command=self.go_to_map_selection,
+                                      height=2,
+                                      width=15)
         self.start_button.place(relx=0.5, rely=0.4, anchor="center")
 
         button1 = tk.Button(
             self,
             text="Choose Algorithm",
-            font=(BUTTON_FONT, BUTTON_SIZE),  # Sử dụng BUTTON_FONT
+            font=(BUTTON_FONT, BUTTON_SIZE),
             bg=BUTTON_COLOR,
             fg="white",
             command=lambda: controller.show_frame("ChooseAlgorithm"),
@@ -58,19 +58,18 @@ class MenuPage(tk.Frame):
         button1.place(relx=0.5, rely=0.5, anchor="center")
 
         # Exit button
-        button2 = tk.Button(
-            self,
-            text="Exit",
-            font=(BUTTON_FONT, BUTTON_SIZE),  # Sử dụng BUTTON_FONT
-            bg=BUTTON_COLOR,
-            fg="white",
-            command=self.controller.quit,
-            height=2,
-            width=15)
+        button2 = tk.Button(self,
+                            text="Exit",
+                            font=(BUTTON_FONT, BUTTON_SIZE),
+                            bg=BUTTON_COLOR,
+                            fg="white",
+                            command=self.controller.quit,
+                            height=2,
+                            width=15)
         button2.place(relx=0.5, rely=0.6, anchor="center")
 
     def go_to_map_selection(self):
-        self.controller.show_frame("MapSelection")  # Go to map selection page
+        self.controller.show_frame("MapSelection")
 
     def update_start_button(self):
         self.start_button.config(text="Start with " +
@@ -185,15 +184,17 @@ class MapSelection(tk.Frame):
         map.draw_map()
         solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
         run = map.run_game(solution)
-        
+
         if run:
             with open(output_path, "w") as f:
                 f.write(f"Algorithm:{algo} \n")
                 f.write(f"steps:{len(map.path)} Weight:{map.total_weight} ")
-                f.write(f"Node:{numberOfNode} Time (ms):{run_time} Memory:{memory_usage} MB\n" )
-                f.write(f"Path:{map.path} \n") 
-                
-    
+                f.write(
+                    f"Node:{numberOfNode} Time (ms):{run_time} Memory:{memory_usage} MB\n"
+                )
+                f.write(f"Path:{map.path} \n")
+
+
 class App(tk.Tk):
 
     def __init__(self):
@@ -209,15 +210,12 @@ class App(tk.Tk):
         bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_image)
 
-        # Create container for pages
         container = tk.Frame(self)
         container.pack(fill="both", expand=True)
 
-        # Configure grid of container
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        # Initialize pages
         self.frames = {}
         for Page in (MenuPage, ChooseAlgorithm, MapSelection):
             page_name = Page.__name__
@@ -237,5 +235,6 @@ class App(tk.Tk):
 def run_game():
     app = App()
     app.mainloop()
+
 
 run_game()

@@ -1,3 +1,7 @@
 Algorithm:A* 
+<<<<<<< HEAD
 steps:14 Weight:497 Node:408 Time (ms):54.2666 Memory:0.0 MB
+=======
+steps:14 Weight:497 Node:408 Time (ms):54.3104 Memory:0.015625 MB
+>>>>>>> 850c6a006c95bf53a2e29df16be17a7a728dffbf
 Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
