@@ -1,3 +1,3 @@
-Algorithm:UCS 
-steps:7 Weight:3 Node:23 Time (ms):4.9943 Memory:0.05078125 MB
+Algorithm:BFS 
+steps:7 Weight:3 Node:50 Time (ms):4.2109 Memory:0.0 MB
 Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 

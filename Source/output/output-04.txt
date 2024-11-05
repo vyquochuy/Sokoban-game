@@ -1,3 +1,3 @@
 Algorithm:BFS 
-steps:14 Weight:497 Node:1025 Time (ms):473.3038 Memory:1.8125 MB
+steps:14 Weight:497 Node:1025 Time (ms):125.705 Memory:0.015625 MB
 Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
