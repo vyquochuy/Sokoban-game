@@ -306,7 +306,7 @@ class Game:
                     self.move_down()
 
                 self.draw_map()
-                pygame.time.wait(200)
+                pygame.time.wait(10)
 
                 if self.is_win() and not win_message_displayed:
                     win_message_displayed = True
