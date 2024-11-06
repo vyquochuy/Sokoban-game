@@ -159,22 +159,7 @@ class Game:
         total_weight_rect = total_weight_surface.get_rect(center=(cost_box_x + cost_box_width // 2, cost_box_y + cost_box_height // 2 + 20))
         self.screen.blit(total_weight_surface, total_weight_rect)
         
-        # Draw a close button
-        button_width = 100
-        button_height = 40
-        button_x = self.screen.get_width() - button_width - 10
-        button_y = self.screen.get_height() - button_height - 10
-
-        pygame.draw.rect(self.screen, (200, 0, 0), (button_x, button_y, button_width, button_height))
-        pygame.draw.rect(self.screen, (255, 255, 255), (button_x, button_y, button_width, button_height), 2)
-
-        button_text = "Close"
-        button_surface = self.font.render(button_text, True, (255, 255, 255))
-        button_rect = button_surface.get_rect(center=(button_x + button_width // 2, button_y + button_height // 2))
-        self.screen.blit(button_surface, button_rect)
-        
         pygame.display.flip()
-        return button_x, button_y, button_width, button_height
                 
     def can_push(self, x, y, dx, dy):
         new_x, new_y = x + dx, y + dy
@@ -228,8 +213,6 @@ class Game:
         return True
 
     
-    
-    
     def run_game(self, solution):
         font = pygame.font.SysFont(None, 60)
         running = True
@@ -252,36 +235,68 @@ class Game:
             
         while running:
             pygame.time.wait(500)
-            button_x, button_y, button_width, button_height = self.draw_map()  # Get button position and size
             
             for char in self.path:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
-                        return True
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
-                        return True     
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse_x, mouse_y = event.pos
-                        if button_x <= mouse_x <= button_x + button_width and button_y <= mouse_y <= button_y + button_height:
-                            pygame.quit()
-                            return True
+                        
+                if not running:
+                    break
                 
-                if not self.is_win():
-                    if char in ['r', 'R']:
-                        self.move_right()
-                    elif char in ['l', 'L']:
-                        self.move_left()
-                    elif char in ['u', 'U']:
-                        self.move_up()
-                    elif char in ['d', 'D']:
-                        self.move_down()
+                if char in ['r', 'R']:
+                    self.move_right()
+                elif char in ['l', 'L']:
+                    self.move_left()
+                elif char in ['u', 'U']:
+                    self.move_up()
+                elif char in ['d', 'D']:
+                    self.move_down()
 
-                    self.draw_map()
-                    pygame.time.wait(200)
+                self.draw_map()
+                pygame.time.wait(200)
+                
+                if self.is_win() and not win_message_displayed:
+                    win_message_displayed = True
+                    text_surface = font.render("You Win!", True, (0, 255, 0))
+                    text_rect = text_surface.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+                    self.screen.blit(text_surface, text_rect)
+                    pygame.display.flip()
                     
-        return True
+                    # Button Close
+                    button_color = (195, 109, 55)   # Màu nền của nút
+                    border_color = (255, 255, 255)  # Màu viền
+                    button_font = pygame.font.Font(None, 36)
+                    button_text = button_font.render("Close", True, (255, 255, 255))
+
+                    # Xác định vị trí và kích thước nút
+                    button_rect = button_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 50))
+                    button_rect = button_rect.inflate(40, 20)
+                    border_rect = button_rect.inflate(4, 4) 
+
+                    # Vẽ viền cho nút
+                    pygame.draw.rect(self.screen, border_color, border_rect)
+                    
+                    # Vẽ hình chữ nhật của nút chính bên trong viền
+                    pygame.draw.rect(self.screen, button_color, button_rect)
+
+                    # Vẽ văn bản "Close" lên nút
+                    #self.screen.blit(button_text, button_rect)
+                    self.screen.blit(button_text, button_text.get_rect(center=button_rect.center))
+                    pygame.display.flip()
+                    
+                    waiting = True
+                    while waiting:
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                                return
+                            elif event.type == pygame.MOUSEBUTTONDOWN:
+                                if button_rect.collidepoint(event.pos):
+                                    pygame.quit()
+                                    return
     
 def init_game(filename):
     pygame.init()
