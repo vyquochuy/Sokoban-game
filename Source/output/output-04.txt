@@ -1,3 +1,15 @@
 Algorithm:A* 
 steps:14 Weight:4999997 Node:521 Time (ms):95.7222 Memory:0.01171875 MB
 Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
+Algorithm:A* 
+steps:14 Weight:4999997 Node:1458 Time (ms):865.1718 Memory:0.0 MB
+Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
+Algorithm:A* 
+steps:14 Weight:4999997 Node:1458 Time (ms):878.0014 Memory:0.0 MB
+Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
+Algorithm:UCS 
+steps:14 Weight:4999997 Node:287 Time (ms):83.6543 Memory:0.0 MB
+Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 
+Algorithm:UCS 
+steps:14 Weight:4999997 Node:287 Time (ms):78.827 Memory:0.0 MB
+Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 

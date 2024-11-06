@@ -1,3 +1,15 @@
 Algorithm:A* 
 steps:21 Weight:116 Node:4737 Time (ms):3546.1259 Memory:1.82421875 MB
 Path:['L', 'U', 'U', 'U', 'l', 'u', 'R', 'd', 'd', 'd', 'd', 'L', 'd', 'l', 'U', 'U', 'U', 'U', 'l', 'u', 'R'] 
+Algorithm:UCS 
+steps:21 Weight:116 Node:3671 Time (ms):3332.4955 Memory:0.0 MB
+Path:['L', 'U', 'U', 'U', 'l', 'u', 'R', 'd', 'd', 'd', 'd', 'L', 'd', 'l', 'U', 'U', 'U', 'U', 'l', 'u', 'R'] 
+Algorithm:BFS 
+steps:21 Weight:116 Node:8103 Time (ms):17101.8003 Memory:0.20703125 MB
+Path:['L', 'U', 'U', 'U', 'l', 'u', 'R', 'd', 'd', 'd', 'd', 'L', 'd', 'l', 'U', 'U', 'U', 'U', 'l', 'u', 'R'] 
+Algorithm:BFS 
+steps:21 Weight:116 Node:8103 Time (ms):18214.4358 Memory:0.49609375 MB
+Path:['L', 'U', 'U', 'U', 'l', 'u', 'R', 'd', 'd', 'd', 'd', 'L', 'd', 'l', 'U', 'U', 'U', 'U', 'l', 'u', 'R'] 
+Algorithm:A* 
+steps:21 Weight:116 Node:4919 Time (ms):5861.5954 Memory:0.00390625 MB
+Path:['L', 'U', 'U', 'U', 'l', 'u', 'R', 'd', 'd', 'd', 'd', 'L', 'd', 'l', 'U', 'U', 'U', 'U', 'l', 'u', 'R'] 
