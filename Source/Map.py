@@ -292,11 +292,11 @@ class Game:
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 pygame.quit()
-                                return
+                                return True
                             elif event.type == pygame.MOUSEBUTTONDOWN:
                                 if button_rect.collidepoint(event.pos):
                                     pygame.quit()
-                                    return
+                                    return True
     
 def init_game(filename):
     pygame.init()

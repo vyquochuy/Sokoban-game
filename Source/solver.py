@@ -271,8 +271,20 @@ class Solver:
                         temp = 9999999
                         for storage in storages:
                             distanceToNearest = abs(storage[0] - i) + abs(storage[1] - j)
-                            temp = min(temp, distanceToNearest) + 1
+                            temp = min(temp, distanceToNearest)
                         distance += temp
+        return distance
+    
+    def manhattan_weighted(self, state, storages):
+        distance = 0
+        for i in range(self.lines):
+            for j in range(self.maxRowLength):
+                if state[i][j] == '$':
+                    temp = float('inf')
+                    for storage in storages:
+                        distanceToNearest = abs(storage[0] - i) + abs(storage[1] - j)
+                        temp = min(temp, distanceToNearest) + self.stones_positions[0]['weight']
+                    distance += temp
         return distance
     
     def Astar(self):
@@ -292,7 +304,7 @@ class Solver:
         source = [self.boxRobot, movesList]
         if self.boxRobot not in self.visitedMoves:
             self.visitedMoves.append(self.boxRobot)
-        queue.put((self.manhattan(self.boxRobot, storages), source))
+        queue.put((self.manhattan_weighted(self.boxRobot, storages), source))
         robot_x = -1
         robot_y = -1
         
@@ -356,7 +368,7 @@ class Solver:
                                 print(f"Moves: {movesTillNowCopy}")
                                 print(f"Total cost: {self.total_cost}")
                             else:
-                                queue.put((self.manhattan(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
+                                queue.put((self.manhattan_weighted(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
                                 self.visitedMoves.append(curPositionCopy)
                 else:
                     if self.wallsStorageSpaces[robotNew_x][robotNew_y] == '#' or curPositionCopy[robotNew_x][robotNew_y] != ' ':
@@ -366,13 +378,13 @@ class Solver:
                         curPositionCopy[robot_x][robot_y] = ' '
                         if curPositionCopy not in self.visitedMoves:
                             movesTillNowCopy.append(key.lower())
-                            queue.put((self.manhattan(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
+                            queue.put((self.manhattan_weighted(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
                             self.visitedMoves.append(curPositionCopy)
                         
         return self.complete(time_start, memory_start)
     
     def ucs(self):
-        print("Solving using UCS with manhattan heuristic")
+        print("Solving using UCS")
         time_start = time.perf_counter()
         memory_start = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         
