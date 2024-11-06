@@ -183,18 +183,18 @@ class MapSelection(tk.Frame):
         map = Map.init_game(filepath)
         map.draw_map()
 
-        solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
-        run = map.run_game(solution)
+        # solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
+        # run = map.run_game(solution)
         
-        if run:
-            print(f"Solution found in {len(map.path)} steps")
-            with open(output_path, "a") as f:
-                f.write(f"Algorithm:{algo} \n")
-                f.write(f"steps:{len(map.path)} Weight:{map.total_weight} ")
-                f.write(
-                    f"Node:{numberOfNode} Time (ms):{run_time} Memory:{memory_usage} MB\n"
-                )
-                f.write(f"Path:{map.path} \n")
+        # if run:
+        #     print(f"Solution found in {len(map.path)} steps")
+        #     with open(output_path, "a") as f:
+        #         f.write(f"Algorithm:{algo} \n")
+        #         f.write(f"steps:{len(map.path)} Weight:{map.total_weight} ")
+        #         f.write(
+        #             f"Node:{numberOfNode} Time (ms):{run_time} Memory:{memory_usage} MB\n"
+        #         )
+        #         f.write(f"Path:{map.path} \n")
 
 
 class App(tk.Tk):
