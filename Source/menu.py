@@ -198,13 +198,26 @@ class App(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
+
+        # Đặt kích thước cửa sổ
         self.geometry(GEOMETRY)
         self.title("Ares’s Adventure")
         self.title_font = (BUTTON_FONT, 18)
 
+        # Lấy kích thước màn hình và tính toán vị trí trung tâm
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        window_width, window_height = map(int, GEOMETRY.split('x'))
+        x_position = (screen_width - window_width) // 2
+        y_position = (screen_height - window_height) // 2
+
+        # Cập nhật vị trí cửa sổ để nằm giữa màn hình
+        self.geometry(f"{GEOMETRY}+{x_position}+{y_position}")
+
         self.algorithm = ALGORITHMS[0]
         self.map_name = None
 
+        # Tải hình nền
         bg_image = Image.open("img/Menu background.png")
         bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_image)
@@ -225,6 +238,42 @@ class App(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("MenuPage")
+
+
+# class App(tk.Tk):
+
+#     def __init__(self):
+#         tk.Tk.__init__(self)
+#         self.geometry(GEOMETRY)
+#         self.title("Ares’s Adventure")
+#         self.title_font = (BUTTON_FONT, 18)
+
+#         # màn hình chính giữa
+#         self.geometry(f"{GEOMETRY}+{x_position}+{y_position}")
+
+#         self.algorithm = ALGORITHMS[0]
+#         self.map_name = None
+
+#         bg_image = Image.open("img/Menu background.png")
+#         bg_image = bg_image.resize((1280, 720), Image.LANCZOS)
+#         self.bg_image = ImageTk.PhotoImage(bg_image)
+
+#         container = tk.Frame(self)
+#         container.pack(fill="both", expand=True)
+
+#         container.grid_rowconfigure(0, weight=1)
+#         container.grid_columnconfigure(0, weight=1)
+
+#         self.frames = {}
+#         for Page in (MenuPage, ChooseAlgorithm, MapSelection):
+#             page_name = Page.__name__
+#             frame = Page(parent=container,
+#                          controller=self,
+#                          bg_image=self.bg_image)
+#             self.frames[page_name] = frame
+#             frame.grid(row=0, column=0, sticky="nsew")
+
+#         self.show_frame("MenuPage")
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
