@@ -1,3 +1,24 @@
 Algorithm:BFS 
 steps:7 Weight:3 Node:50 Time (ms):3.9685 Memory:0.07421875 MB
 Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:A* 
+steps:7 Weight:3 Node:33 Time (ms):10.9796 Memory:0.05859375 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:UCS 
+steps:7 Weight:3 Node:23 Time (ms):4.6326 Memory:0.00390625 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:DFS 
+steps:11 Weight:3 Node:20 Time (ms):5.3067 Memory:0.00390625 MB
+Path:['l', 'l', 'd', 'd', 'd', 'd', 'r', 'd', 'r', 'r', 'U'] 
+Algorithm:BFS 
+steps:7 Weight:3 Node:50 Time (ms):4.409 Memory:0.07421875 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:UCS 
+steps:7 Weight:3 Node:23 Time (ms):2.3147 Memory:0.0546875 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:BFS 
+steps:7 Weight:3 Node:50 Time (ms):8.8905 Memory:0.07421875 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:BFS 
+steps:7 Weight:3 Node:50 Time (ms):8.6486 Memory:0.0 MB
+Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 

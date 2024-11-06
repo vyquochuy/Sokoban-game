@@ -50,8 +50,8 @@ class Solver:
 
     def complete(self, time_start, memory_start):           
         if self.completed == 0:
-            print("Can't make it")  
-            return []
+            # print("Can't make it")
+            return [], 0,0,0
         time_end = time.perf_counter()
         memory_end = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         run_time = round((time_end - time_start) * 1000, 4)
@@ -62,7 +62,7 @@ class Solver:
         return len(self.visitedMoves)
     
     def dfs(self):
-        print("Solving using DFS")
+        # print("Solving using DFS")
         time_start = time.perf_counter()
         memory_start = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         
@@ -124,7 +124,7 @@ class Solver:
                                     movesTillNowCopy.append(key)
                                     if matches == 0:
                                         self.completed = 1
-                                        print(movesTillNowCopy)
+                                        # print(movesTillNowCopy)
                                         self.path.append(movesTillNowCopy)
                                     else:
                                         self.queue.appendleft([curPositionCopy, movesTillNowCopy])
@@ -146,7 +146,7 @@ class Solver:
     
     
     def bfs(self):
-        print("Solving using BFS")
+        # print("Solving using BFS")
         time_start = time.perf_counter()
         memory_start = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
 
@@ -242,8 +242,7 @@ class Solver:
                                         break
                                         
                                 
-                            print(f"Moves: {movesTillNowCopy}")  # Print the total total_cost
-                            print(f"Total Cost: {self.total_cost}")
+                            # print(f"Moves: {movesTillNowCopy}")
                         else:
                             self.queue.append([curPositionCopy, movesTillNowCopy, current_cost])  # Append current total_cost to the queue
                             self.visitedMoves.append(curPositionCopy)
@@ -271,12 +270,24 @@ class Solver:
                         temp = 9999999
                         for storage in storages:
                             distanceToNearest = abs(storage[0] - i) + abs(storage[1] - j)
-                            temp = min(temp, distanceToNearest) + 1
+                            temp = min(temp, distanceToNearest)
                         distance += temp
         return distance
     
+    def manhattan_weighted(self, state, storages):
+        distance = 0
+        for i in range(self.lines):
+            for j in range(self.maxRowLength):
+                if state[i][j] == '$':
+                    temp = float('inf')
+                    for storage in storages:
+                        distanceToNearest = abs(storage[0] - i) + abs(storage[1] - j)
+                        temp = min(temp, distanceToNearest) + self.stones_positions[0]['weight']
+                    distance += temp
+        return distance
+    
     def Astar(self):
-        print("Solving using A* with manhattan heuristic")
+        # print("Solving using A* with manhattan heuristic")
         time_start = time.perf_counter()
         memory_start = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         
@@ -292,7 +303,7 @@ class Solver:
         source = [self.boxRobot, movesList]
         if self.boxRobot not in self.visitedMoves:
             self.visitedMoves.append(self.boxRobot)
-        queue.put((self.manhattan(self.boxRobot, storages), source))
+        queue.put((self.manhattan_weighted(self.boxRobot, storages), source))
         robot_x = -1
         robot_y = -1
         
@@ -353,10 +364,8 @@ class Solver:
                                                 i += 1
                                             break
                                         
-                                print(f"Moves: {movesTillNowCopy}")
-                                print(f"Total cost: {self.total_cost}")
                             else:
-                                queue.put((self.manhattan(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
+                                queue.put((self.manhattan_weighted(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
                                 self.visitedMoves.append(curPositionCopy)
                 else:
                     if self.wallsStorageSpaces[robotNew_x][robotNew_y] == '#' or curPositionCopy[robotNew_x][robotNew_y] != ' ':
@@ -366,13 +375,13 @@ class Solver:
                         curPositionCopy[robot_x][robot_y] = ' '
                         if curPositionCopy not in self.visitedMoves:
                             movesTillNowCopy.append(key.lower())
-                            queue.put((self.manhattan(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
+                            queue.put((self.manhattan_weighted(curPositionCopy, storages) + stepsTillNow, [curPositionCopy, movesTillNowCopy]))
                             self.visitedMoves.append(curPositionCopy)
                         
         return self.complete(time_start, memory_start)
     
     def ucs(self):
-        print("Solving using UCS with manhattan heuristic")
+        # print("Solving using UCS")
         time_start = time.perf_counter()
         memory_start = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         
@@ -469,8 +478,8 @@ class Solver:
                                                 i += 1
                                             break
                                         
-                                print(f"Moves: {movesTillNowCopy}")
-                                print(f"Total cost: {self.total_cost}")
+                                # print(f"Moves: {movesTillNowCopy}")
+                                # print(f"Total cost: {self.total_cost}")
                             else:
                                 boxRobtDistance = 999999
                                 boxes = []

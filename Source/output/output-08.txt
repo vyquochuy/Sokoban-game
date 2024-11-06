@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 Algorithm:BFS 
 steps:23 Weight:92 Node:1280 Time (ms):162.8519 Memory:1.515625 MB
+=======
+Algorithm:A* 
+steps:23 Weight:92 Node:744 Time (ms):241.3894 Memory:0.00390625 MB
+Path:['d', 'l', 'l', 'l', 'l', 'u', 'u', 'R', 'R', 'u', 'r', 'D', 'D', 'D', 'l', 'd', 'R', 'd', 'l', 'l', 'l', 'U', 'U'] 
+Algorithm:BFS 
+steps:23 Weight:92 Node:1280 Time (ms):538.1738 Memory:1.546875 MB
+>>>>>>> a684c045bc989c1657b7395d36a39c0e76618454
 Path:['d', 'd', 'l', 'd', 'l', 'l', 'l', 'U', 'U', 'l', 'u', 'u', 'r', 'R', 'R', 'u', 'r', 'D', 'D', 'D', 'l', 'd', 'R'] 

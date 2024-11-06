@@ -1,5 +1,15 @@
+pygame là một thư viện phổ biến trong Python được dùng để phát triển các trò chơi 2D
+và ứng dụng đa phương tiện. Nó cung cấp các công cụ giúp tạo đồ họa, âm thanh, và xử 
+lý sự kiện (như phím bấm hoặc chuột). Một số tính năng chính:
 
+Pillow là một thư viện xử lý ảnh mạnh mẽ, hỗ trợ nhiều định dạng ảnh và cung cấp các
+công cụ để chỉnh sửa và biến đổi ảnh. Một số tính năng chính:
 
-pip install pygame
-pip install pillow
-pip install psutil
+psutil là một thư viện cho phép quản lý và theo dõi hệ thống. Thư viện này cung cấp 
+các phương thức để lấy thông tin về tài nguyên hệ thống, quá trình (process), và hiệu
+năng, phù hợp cho việc quản lý hoặc theo dõi ứng dụng chạy trên máy chủ
+
+để tải các thư viện này, chạy lệnh sau:
+    pip install pygame
+    pip install pillow
+    pip install psutil

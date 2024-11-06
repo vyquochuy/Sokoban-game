@@ -114,7 +114,7 @@ class ChooseAlgorithm(tk.Frame):
 
     def choose_algorithm(self, algo):
         self.controller.algorithm = algo
-        print(f"Chosen algorithm: {algo}")
+        # print(f"Chosen algorithm: {algo}")
 
         # Update start button in MenuPage
         self.controller.frames["MenuPage"].update_start_button()
@@ -168,7 +168,7 @@ class MapSelection(tk.Frame):
     def choose_map(self, map_name):
         self.controller.map_name = map_name
         algo = self.controller.algorithm
-        print(f"Chosen map: {map_name}")
+        # print(f"Chosen map: {map_name}")
 
         map_number = int(map_name.split()[-1])
         if map_number != 10:
@@ -183,9 +183,10 @@ class MapSelection(tk.Frame):
 
         solution, numberOfNode, run_time, memory_usage = Map.solve(algo, map)
         run = map.run_game(solution)
-
+        
         if run:
-            with open(output_path, "w") as f:
+            # print(f"Solution found in {len(map.path)} steps")
+            with open(output_path, "a") as f:
                 f.write(f"Algorithm:{algo} \n")
                 f.write(f"steps:{len(map.path)} Weight:{map.total_weight} ")
                 f.write(
