@@ -212,6 +212,9 @@ class Game:
                 return False
         return True
 
+    
+    
+    
     def run_game(self, solution):
         font = pygame.font.SysFont(None, 60)
         running = True
@@ -263,13 +266,40 @@ class Game:
                     text_rect = text_surface.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
                     self.screen.blit(text_surface, text_rect)
                     pygame.display.flip()
-                    pygame.time.wait(2000)
-                    running = False
-                    break
+                    
+                    # Button Close
+                    button_color = (195, 109, 55)   # Màu nền của nút
+                    border_color = (255, 255, 255)  # Màu viền
+                    button_font = pygame.font.Font(None, 36)
+                    button_text = button_font.render("Close", True, (255, 255, 255))
 
-        pygame.quit()
-        return True
-    
+                    # Xác định vị trí và kích thước nút
+                    button_rect = button_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 50))
+                    button_rect = button_rect.inflate(40, 20)
+                    border_rect = button_rect.inflate(4, 4) 
+
+                    # Vẽ viền cho nút
+                    pygame.draw.rect(self.screen, border_color, border_rect)
+                    
+                    # Vẽ hình chữ nhật của nút chính bên trong viền
+                    pygame.draw.rect(self.screen, button_color, button_rect)
+
+                    # Vẽ văn bản "Close" lên nút
+                    #self.screen.blit(button_text, button_rect)
+                    self.screen.blit(button_text, button_text.get_rect(center=button_rect.center))
+                    pygame.display.flip()
+                    
+                    waiting = True
+                    while waiting:
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                                return
+                            elif event.type == pygame.MOUSEBUTTONDOWN:
+                                if button_rect.collidepoint(event.pos):
+                                    pygame.quit()
+                                    return
+
 def init_game(filename):
     pygame.init()
     pygame.font.init()
