@@ -1,13 +1,11 @@
 import tkinter as tk
 import Map
-import solver
 import pygame
 from PIL import Image, ImageTk
 
 pygame.init()
 pygame.font.init()
 
-# Constants
 ALGORITHMS = ["BFS", "DFS", "UCS", "A*"]
 MAPS = [f"Map {i}" for i in range(1, 11)]
 

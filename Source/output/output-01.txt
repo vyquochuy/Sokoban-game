@@ -1,3 +1,3 @@
-Algorithm:A* 
-steps:7 Weight:3 Node:33 Time (ms):6.1671 Memory:0.05859375 MB
-Path:['d', 'd', 'd', 'd', 'd', 'r', 'U'] 
+Algorithm:DFS 
+steps:11 Weight:3 Node:20 Time (ms):2.295 Memory:0.03125 MB
+Path:['l', 'l', 'd', 'd', 'd', 'd', 'r', 'd', 'r', 'r', 'U'] 

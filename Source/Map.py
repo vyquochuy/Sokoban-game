@@ -1,9 +1,5 @@
 import sys
 import pygame
-import collections
-import copy
-import os
-import time
 import solver
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -306,7 +302,7 @@ class Game:
                     self.move_down()
 
                 self.draw_map()
-                pygame.time.wait(10)
+                pygame.time.wait(200)
 
                 if self.is_win() and not win_message_displayed:
                     win_message_displayed = True
