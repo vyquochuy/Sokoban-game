@@ -1,5 +1,5 @@
-Algorithm:BFS 
-steps:8 Weight:17 Node:133 Time (ms):9.5398 Memory:0.109375 MB
+Algorithm:A* 
+steps:8 Weight:17 Node:48 Time (ms):4.4161 Memory:0.01171875 MB
 Path:['d', 'R', 'D', 'D', 'l', 'd', 'R', 'R'] 
 Algorithm:DFS 
 steps:464 Weight:363 Node:7882 Time (ms):19709.8585 Memory:9.61328125 MB

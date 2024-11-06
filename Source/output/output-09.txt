@@ -1,3 +1,3 @@
 Algorithm:A* 
-steps:31 Weight:430 Node:20117 Time (ms):52254.8044 Memory:8.05859375 MB
-Path:['r', 'D', 'r', 'u', 'u', 'u', 'l', 'D', 'D', 'l', 'l', 'l', 'l', 'u', 'R', 'd', 'd', 'd', 'r', 'r', 'R', 'U', 'r', 'u', 'L', 'L', 'L', 'U', 'l', 'D', 'D'] 
+steps:22 Weight:180 Node:8768 Time (ms):13108.6652 Memory:2.7578125 MB
+Path:['r', 'r', 'u', 'L', 'd', 'r', 'd', 'L', 'L', 'u', 'U', 'l', 'u', 'l', 'D', 'D', 'u', 'r', 'r', 'r', 'u', 'L'] 
