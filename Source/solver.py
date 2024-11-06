@@ -50,8 +50,8 @@ class Solver:
 
     def complete(self, time_start, memory_start):           
         if self.completed == 0:
-            print("Can't make it")  
-            return []
+            print("Can't make it")
+            return [], 0,0,0
         time_end = time.perf_counter()
         memory_end = psutil.Process().memory_info().rss / (1024 * 1024)  # Convert to MB
         run_time = round((time_end - time_start) * 1000, 4)
