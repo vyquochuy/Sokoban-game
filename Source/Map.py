@@ -266,7 +266,7 @@ class Game:
                     pygame.display.flip()
                     
                     # Button Close
-                    button_color = (195, 109, 55)   # Màu nền của nút
+                    button_color = (255, 0, 0)   # Màu nền của nút
                     border_color = (255, 255, 255)  # Màu viền
                     button_font = pygame.font.Font(None, 36)
                     button_text = button_font.render("Close", True, (255, 255, 255))
