@@ -1,3 +1,3 @@
-Algorithm:BFS 
-steps:31 Weight:430 Node:30215 Time (ms):409871.7137 Memory:18.515625 MB
-Path:['r', 'D', 'u', 'r', 'u', 'u', 'l', 'D', 'D', 'l', 'l', 'l', 'l', 'u', 'R', 'd', 'd', 'd', 'r', 'r', 'R', 'U', 'r', 'u', 'L', 'L', 'L', 'U', 'l', 'D', 'D'] 
+Algorithm:A* 
+steps:31 Weight:430 Node:20117 Time (ms):52254.8044 Memory:8.05859375 MB
+Path:['r', 'D', 'r', 'u', 'u', 'u', 'l', 'D', 'D', 'l', 'l', 'l', 'l', 'u', 'R', 'd', 'd', 'd', 'r', 'r', 'R', 'U', 'r', 'u', 'L', 'L', 'L', 'U', 'l', 'D', 'D'] 
