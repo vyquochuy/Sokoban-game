@@ -1,8 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 Algorithm:A* 
 steps:14 Weight:4999997 Node:521 Time (ms):76.4084 Memory:1.03515625 MB
 =======
 Algorithm:UCS 
 steps:14 Weight:497 Node:287 Time (ms):26.2509 Memory:0.0 MB
 >>>>>>> 2174d6006fe645579792a82512cf13dab6ca1a06
+=======
+Algorithm:A* 
+steps:14 Weight:497 Node:408 Time (ms):38.9283 Memory:0.0078125 MB
+>>>>>>> 872215bc8c1e1aeeb896a95cdc604142f2a7c0e3
 Path:['l', 'd', 'l', 'U', 'U', 'l', 'u', 'U', 'U', 'r', 'u', 'L', 'L', 'L'] 

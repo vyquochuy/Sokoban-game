@@ -227,6 +227,9 @@ class Game:
                 return False
         return True
 
+    
+    
+    
     def run_game(self, solution):
         font = pygame.font.SysFont(None, 60)
         running = True

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 Algorithm:BFS 
 steps:8 Weight:17 Node:133 Time (ms):23.9654 Memory:0.10546875 MB
+=======
+Algorithm:A* 
+steps:8 Weight:17 Node:59 Time (ms):3.5653 Memory:0.02734375 MB
+>>>>>>> 872215bc8c1e1aeeb896a95cdc604142f2a7c0e3
 Path:['d', 'R', 'D', 'D', 'l', 'd', 'R', 'R'] 
